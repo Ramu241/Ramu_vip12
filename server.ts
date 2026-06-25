@@ -9,14 +9,24 @@ async function startServer() {
   // Secure server-side proxy endpoint to bypass CORS and reliably fetch Wingo histories
   app.get("/api/history", async (req, res) => {
     try {
-      const mode = req.query.mode === "1m" ? "WinGo_1M" : "WinGo_30S";
-      const apiEndpoint = `https://draw.ar-lottery01.com/WinGo/${mode}/GetHistoryIssuePage.json`;
+      let mode = "WinGo_30S";
+      const qMode = req.query.mode;
+      if (qMode === "1m") {
+        mode = "WinGo_1M";
+      } else {
+        mode = "WinGo_30S";
+      }
+      
+      // Force freshness on the Wingo API by using a dynamic cache-buster timestamp
+      const apiEndpoint = `https://draw.ar-lottery01.com/WinGo/${mode}/GetHistoryIssuePage.json?t=${Date.now()}`;
 
       const response = await fetch(apiEndpoint, {
         headers: {
           "Accept": "application/json",
           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-          "Referer": "https://bdgwinmy.cc/"
+          "Referer": "https://bdgwinmy.cc/",
+          "Cache-Control": "no-cache",
+          "Pragma": "no-cache"
         }
       });
 
@@ -25,6 +35,13 @@ async function startServer() {
       }
 
       const data = await response.json();
+      
+      // Set explicit non-caching headers on the proxy response
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+      res.setHeader('Surrogate-Control', 'no-store');
+      
       res.json(data);
     } catch (error: any) {
       console.error("Proxy error:", error.message);

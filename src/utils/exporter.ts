@@ -999,3 +999,368 @@ export function triggerHTMLDownload() {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+
+export function triggerAPKDownloadHTML(apkLink: string) {
+  const htmlContent = `<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>╰‿╯RAMUㅤᏴᎻᎪᏆ VIP PRO - Official APK Download</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            gold: '#d4af37',
+                            cyan: '#06b6d4',
+                            amber: '#f59e0b',
+                            emerald: '#10b981',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes gold-pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.8); }
+        }
+        .animate-gold-glow {
+            animation: gold-pulse 2s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: float 4s infinite ease-in-out;
+        }
+        body {
+            background-color: #020405;
+            color: #f4f4f5;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020405;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(245, 158, 11, 0.2);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-[#020405] text-zinc-100 flex flex-col selection:bg-amber-500/30 selection:text-white pb-12 overflow-x-hidden relative">
+
+    <!-- Glowing visual background orb -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[radial-gradient(circle_at_top,rgba(245,158,11,0.08)_0%,rgba(0,0,0,0)_70%)] pointer-events-none z-0"></div>
+
+    <!-- Header / Navigation -->
+    <header class="border-b border-zinc-900/80 bg-black/40 backdrop-blur-md sticky top-0 z-50 px-4 py-4">
+        <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-black font-black font-display text-xl shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                    R
+                </div>
+                <div>
+                    <h1 class="text-sm md:text-base font-display font-black tracking-widest text-white uppercase flex items-center gap-1.5">
+                        RAMU VIP PRO <span class="text-[8px] bg-emerald-500 text-black px-1.5 py-0.5 rounded font-mono font-bold tracking-normal">OFFICIAL APK</span>
+                    </h1>
+                    <p class="text-[8px] text-zinc-500 font-mono tracking-wider uppercase">
+                        Supercharged 2026 Gaming Companion Engine
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center gap-1.5 text-[9px] md:text-[10px] font-mono font-bold bg-zinc-950 border border-zinc-900 px-2.5 py-1.5 rounded-full text-emerald-400">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span> 
+                    <span id="activeCount">14,204</span> ONLINE
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl w-full mx-auto px-4 mt-8 flex-1 flex flex-col gap-8 relative z-10">
+        
+        <!-- HERO DOWNLOAD SECTION -->
+        <div class="bg-gradient-to-b from-neutral-950 to-zinc-950/40 border border-amber-500/20 rounded-3xl p-6 md:p-10 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center gap-8">
+            <div class="absolute -right-16 -top-16 text-zinc-900 opacity-10 select-none pointer-events-none font-display text-[220px]">
+                🦅
+            </div>
+
+            <!-- Left: Text Core -->
+            <div class="flex-1 space-y-5 text-center md:text-left">
+                <div class="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/20 text-amber-500 font-mono text-[9px] font-bold tracking-wider px-3 py-1 rounded-full uppercase">
+                    ⭐️ LATEST STABLE RELEASE • V20.0
+                </div>
+
+                <div class="space-y-1">
+                    <h2 class="text-2xl md:text-4xl font-display font-black text-white leading-tight uppercase tracking-tight">
+                        ╰‿╯RAMUㅤᏴᎻᎪᏆ <span class="text-amber-500">VIP PRO</span>
+                    </h2>
+                    <h3 class="text-lg md:text-xl font-display font-bold text-zinc-400">
+                        Wingo Live Prediction System
+                    </h3>
+                </div>
+
+                <p class="text-xs md:text-sm text-zinc-400 leading-relaxed font-sans max-w-lg">
+                    Ramu Bhai का सबसे एडवांस और पावरफुल Wingo VIP Predictor अब आपके एंड्रॉइड मोबाइल के लिए एपीके (APK) फॉर्मेट में उपलब्ध है। इसे इंस्टॉल करें, पासवर्ड <span class="text-amber-500 font-bold font-mono text-sm">909090</span> प्रविष्ट करें और तुरंत 99% की सुपर एक्यूरेसी के साथ खेलना शुरू करें।
+                </p>
+
+                <!-- Stats tags row -->
+                <div class="flex flex-wrap justify-center md:justify-start gap-4 font-mono text-[10px] text-zinc-500 pt-1">
+                    <span class="flex items-center gap-1 bg-black/60 px-3 py-1.5 rounded-lg border border-zinc-900">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i> Securing Verified: 100% Virus-Free
+                    </span>
+                    <span class="flex items-center gap-1 bg-black/60 px-3 py-1.5 rounded-lg border border-zinc-900">
+                        <i data-lucide="download" class="w-3.5 h-3.5 text-cyan-400"></i> <span id="downloadCount">1.2M+</span> Downloads
+                    </span>
+                </div>
+            </div>
+
+            <!-- Right: Dynamic Download Visual Card -->
+            <div class="w-full md:w-80 shrink-0 animate-float">
+                <div class="bg-neutral-950 border border-amber-500/30 rounded-2xl p-6 text-center space-y-6 shadow-xl relative animate-gold-glow">
+                    
+                    <div class="w-20 h-20 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center text-black mx-auto shadow-lg shadow-amber-500/20">
+                        <i data-lucide="smartphone" class="w-12 h-12"></i>
+                    </div>
+
+                    <div class="space-y-1">
+                        <span class="text-xs font-mono font-bold text-amber-500 block uppercase tracking-widest">RamuVipPro.apk</span>
+                        <span class="text-[10px] text-zinc-500 font-mono block">FILE SIZE: 8.4 MB • Android 5.0+</span>
+                    </div>
+
+                    <!-- Direct high-octane download button -->
+                    <button onclick="startDownload()" class="w-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 active:scale-95 text-black font-display font-black text-xs py-4 rounded-xl uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-amber-500/10">
+                        <i data-lucide="download" class="w-4 h-4"></i> Download VIP APK Now
+                    </button>
+
+                    <div class="text-[9px] text-zinc-600 font-sans uppercase">
+                        COMPATIBLE WITH ALL PHONES & EMULATORS
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TELEGRAM BANNER -->
+        <div class="bg-gradient-to-r from-sky-950/30 to-zinc-950 border border-sky-500/20 rounded-2xl p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5 text-center md:text-left flex-col md:flex-row">
+                <div class="w-11 h-11 rounded-full bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 shrink-0">
+                    <i data-lucide="send" class="w-5.5 h-5.5 animate-pulse"></i>
+                </div>
+                <div class="space-y-0.5">
+                    <h4 class="text-xs md:text-sm font-display font-black text-sky-400 uppercase tracking-wider">
+                        Join Our Official Telegram Channel
+                    </h4>
+                    <p class="text-[10px] text-zinc-400 max-w-xl">
+                        पैनल के सभी लेटेस्ट अपडेट्स, नए पासपोर्ट कोड्स, और रामू भाई की लाइव प्रेडिक्शन की जानकारी के लिए तुरंत हमारे टेलीग्राम चैनल से जुड़ें।
+                    </p>
+                </div>
+            </div>
+
+            <a href="https://t.me/+h5jDuTLxOEQ4NmVl" target="_blank" rel="noreferrer" class="bg-sky-500 hover:bg-sky-400 text-black font-mono font-bold text-[10px] uppercase tracking-wider px-5 py-2.5 rounded-xl shrink-0 transition-colors">
+                🚀 Join Telegram VIP
+            </a>
+        </div>
+
+        <!-- 3-STEP INSTALLATION GUIDE -->
+        <div class="space-y-4">
+            <h3 class="text-xs font-display font-black tracking-widest text-zinc-400 uppercase text-center border-b border-zinc-900 pb-2">
+                इन्सटॉलेशन गाइड • STEP-BY-STEP INSTALLATION
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                <!-- STEP 1 -->
+                <div class="bg-zinc-950/60 border border-zinc-900 p-5 rounded-2xl space-y-3">
+                    <div class="w-8 h-8 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 font-mono font-bold text-xs flex items-center justify-center">
+                        01
+                    </div>
+                    <div class="space-y-1">
+                        <h4 class="text-xs font-display font-bold text-white uppercase tracking-wide">APK डाउनलोड करें</h4>
+                        <p class="text-[11px] text-zinc-400 leading-relaxed font-sans">
+                            ऊपर दिए गए 'Download VIP APK Now' बटन पर क्लिक करके एपीके फाइल को अपने मोबाइल में सेव करें।
+                        </p>
+                    </div>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="bg-zinc-950/60 border border-zinc-900 p-5 rounded-2xl space-y-3">
+                    <div class="w-8 h-8 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-mono font-bold text-xs flex items-center justify-center">
+                        02
+                    </div>
+                    <div class="space-y-1">
+                        <h4 class="text-xs font-display font-bold text-white uppercase tracking-wide">Unknown Sources अनुमति दें</h4>
+                        <p class="text-[11px] text-zinc-400 leading-relaxed font-sans">
+                            यदि सिस्टम ब्लॉक पॉपअप दिखाता है, तो अपने मोबाइल की <strong>Settings > Security</strong> में जाकर <strong>'Install from Unknown Sources'</strong> को अनुमति (Allow) दें।
+                        </p>
+                    </div>
+                </div>
+
+                <!-- STEP 3 -->
+                <div class="bg-zinc-950/60 border border-zinc-900 p-5 rounded-2xl space-y-3">
+                    <div class="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono font-bold text-xs flex items-center justify-center">
+                        03
+                    </div>
+                    <div class="space-y-1">
+                        <h4 class="text-xs font-display font-bold text-white uppercase tracking-wide">पासपोर्ट डालें और खेलें</h4>
+                        <p class="text-[11px] text-zinc-400 leading-relaxed font-sans">
+                            ऐप को ओपन करें, ओनर से मिला हुआ पासपोर्ट कोड <span class="text-amber-500 font-bold font-mono">909090</span> दर्ज करें और लाइव सिंक प्रेडिक्शन्स प्राप्त करें।
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FREQUENTLY ASKED QUESTIONS -->
+        <div class="bg-zinc-950/30 border border-zinc-900 rounded-2xl p-6 space-y-4">
+            <h3 class="text-xs font-display font-black tracking-widest text-zinc-400 uppercase border-b border-zinc-900 pb-2">
+                अक्सर पूछे जाने वाले प्रश्न • FREQUENTLY ASKED QUESTIONS
+            </h3>
+
+            <div class="space-y-4 divide-y divide-zinc-900">
+                
+                <div class="pt-0 space-y-1">
+                    <h4 class="text-xs font-display font-bold text-white">Q. क्या यह एपीके पूरी तरह से सुरक्षित है?</h4>
+                    <p class="text-[11px] text-zinc-400 leading-relaxed">
+                        हां, रामू भाई का यह ऑफिशियल एपीके 100% सुरक्षित और वायरस-फ्री है। यह आपके फोन से किसी भी प्रकार का व्यक्तिगत डेटा एकत्र नहीं करता है।
+                    </p>
+                </div>
+
+                <div class="pt-3 space-y-1">
+                    <h4 class="text-xs font-display font-bold text-white">Q. पासपोर्ट कोड क्या है और कैसे प्राप्त करें?</h4>
+                    <p class="text-[11px] text-zinc-400 leading-relaxed">
+                        ऐप में एंटर करने के लिए आपको 6 अंकों का पासपोर्ट चाहिए होता है। डिफॉल्ट पासपोर्ट कोड <span class="text-amber-500 font-bold">909090</span> है। यदि यह काम नहीं करता है, तो आप टेलीग्राम चैनल पर रामू भाई से संपर्क करके लेटेस्ट कोड प्राप्त कर सकते हैं।
+                    </p>
+                </div>
+
+                <div class="pt-3 space-y-1">
+                    <h4 class="text-xs font-display font-bold text-white">Q. क्या यह ऐप पीसी या लैपटॉप में काम करेगा?</h4>
+                    <p class="text-[11px] text-zinc-400 leading-relaxed">
+                        हां, आप BlueStacks, LDPlayer या किसी भी अन्य एंड्रॉइड एमुलेटर (Android Emulator) का उपयोग करके इसे अपने पीसी/कंप्यूटर पर भी आसानी से चला सकते हैं।
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="max-w-4xl mx-auto px-4 mt-12 text-center space-y-2">
+        <p class="text-[9px] text-zinc-600 font-mono uppercase tracking-wider">
+            &copy; 2026 RAMU VIP PRO | ALL RIGHTS RESERVED • REGISTERED SECURE UTILITY
+        </p>
+    </footer>
+
+    <!-- INTERACTIVE DOWNLOADING SIMULATION OVERLAY -->
+    <div id="downloadOverlay" class="fixed inset-0 bg-black/95 backdrop-blur-md z-[100000] hidden flex flex-col items-center justify-center p-4">
+        <div class="max-w-xs w-full text-center space-y-6">
+            <!-- Circular Progress SVG -->
+            <div class="relative w-28 h-28 mx-auto flex items-center justify-center">
+                <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" stroke="#18181b" stroke-width="6" fill="transparent" />
+                    <circle id="progressCircle" cx="50" cy="50" r="40" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" fill="transparent" stroke-dasharray="251.2" stroke-dashoffset="251.2" />
+                </svg>
+                <span id="progressText" class="absolute font-mono font-black text-lg text-white">0%</span>
+            </div>
+
+            <div class="space-y-1">
+                <h4 id="statusLabel" class="text-sm font-display font-black uppercase text-amber-500 tracking-wider">
+                    APK डाउनलोड हो रहा है...
+                </h4>
+                <p class="text-[10px] text-zinc-500 font-mono uppercase">
+                    Downloading RamuVipPro.apk • Please wait
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Start Lucide Icons
+        lucide.createIcons();
+
+        // Increment active predictors
+        setInterval(function() {
+            var el = document.getElementById('activeCount');
+            var current = parseInt(el.innerText.replace(',', ''));
+            var diff = Math.floor(Math.random() * 11) - 5; // -5 to +5
+            el.innerText = (current + diff).toLocaleString();
+        }, 3000);
+
+        // Download simulation logic
+        function startDownload() {
+            var overlay = document.getElementById('downloadOverlay');
+            var circle = document.getElementById('progressCircle');
+            var text = document.getElementById('progressText');
+            var status = document.getElementById('statusLabel');
+
+            overlay.classList.remove('hidden');
+            
+            var progress = 0;
+            var interval = setInterval(function() {
+                progress += Math.floor(Math.random() * 12) + 5;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    status.innerText = "सफलतापूर्वक डाउनलोड हुआ!";
+                    status.className = "text-sm font-display font-black uppercase text-emerald-400 tracking-wider";
+                    
+                    setTimeout(function() {
+                        // Redirect to the real APK link
+                        window.location.href = "${apkLink}";
+                        
+                        // Close overlay after brief delay
+                        setTimeout(function() {
+                            overlay.classList.add('hidden');
+                            // Reset state
+                            circle.style.strokeDashoffset = "251.2";
+                            text.innerText = "0%";
+                            status.innerText = "APK डाउनलोड हो रहा है...";
+                            status.className = "text-sm font-display font-black uppercase text-amber-500 tracking-wider";
+                        }, 1000);
+                    }, 500);
+                }
+
+                // Update circle stroke offset (dashoffset is from 251.2 down to 0)
+                var offset = 251.2 - (251.2 * progress) / 100;
+                circle.style.strokeDashoffset = offset;
+                text.innerText = progress + "%";
+            }, 180);
+        }
+    </script>
+</body>
+</html>`;
+
+  // Create downloadable landing page HTML file
+  const blob = new Blob([htmlContent], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Ramu_VIP_Pro_APK_Download.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
