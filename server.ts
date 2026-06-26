@@ -1,10 +1,36 @@
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
+import { getPredictorHTML, getAPKDownloadHTML } from "./src/utils/exporter";
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
+
+  // Standalone offline predictor direct download endpoint (never stops working)
+  app.get("/download-predictor", (req, res) => {
+    try {
+      const html = getPredictorHTML();
+      res.setHeader("Content-Type", "text/html");
+      res.setHeader("Content-Disposition", "attachment; filename=Wingo_VIP_Predictor.html");
+      res.send(html);
+    } catch (error: any) {
+      res.status(500).send("Error generating file: " + error.message);
+    }
+  });
+
+  // Standalone APK landing and download page direct download endpoint
+  app.get("/download-app", (req, res) => {
+    try {
+      const defaultApkLink = "https://github.com/ramubhai-wingo/vip-predictor/releases/download/v1.0.0/Wingo_VIP_Predictor.apk";
+      const html = getAPKDownloadHTML(defaultApkLink);
+      res.setHeader("Content-Type", "text/html");
+      res.setHeader("Content-Disposition", "attachment; filename=Wingo_VIP_Predictor_App.html");
+      res.send(html);
+    } catch (error: any) {
+      res.status(500).send("Error generating file: " + error.message);
+    }
+  });
 
   // Secure server-side proxy endpoint to bypass CORS and reliably fetch Wingo histories
   app.get("/api/history", async (req, res) => {

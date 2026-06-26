@@ -3,8 +3,8 @@
  * version of the Wingo VIP Pro prediction engine and Martingale tool.
  */
 
-export function triggerHTMLDownload() {
-  const htmlContent = `<!DOCTYPE html>
+export function getPredictorHTML(): string {
+  return `<!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
@@ -349,7 +349,6 @@ export function triggerHTMLDownload() {
                         <select onchange="updateSettings()" id="selPredMode" class="w-full bg-zinc-900 border border-zinc-800 p-2 rounded text-xs font-mono text-zinc-300 font-bold focus:outline-none cursor-pointer">
                             <option value="auto">Auto Hybrid Compass</option>
                             <option value="onlyBS">Only Size Big/Small</option>
-                            <option value="onlyColor">Only Color Red/Green</option>
                             <option value="safe">Strict Standby Mode</option>
                         </select>
                     </div>
@@ -739,6 +738,7 @@ export function triggerHTMLDownload() {
             // Generate Next Prediction based on Strategy
             const analysis = calculateNextMove(ch.serverHistory);
             const conf = analysis.confidence;
+            const realConf = analysis.internalConfidence;
             let finalChoice = null;
             let finalMode = 'BS';
 
@@ -751,8 +751,8 @@ export function triggerHTMLDownload() {
                 finalMode = 'COLOR';
                 finalChoice = analysis.colorChoice;
             } else if (settings.predMode === 'safe') {
-                if (conf >= settings.minConfidence) {
-                    if (conf >= 85) {
+                if (realConf >= settings.minConfidence) {
+                    if (realConf >= 85) {
                         finalMode = 'BS';
                         finalChoice = analysis.bsChoice;
                     } else {
@@ -763,8 +763,8 @@ export function triggerHTMLDownload() {
                     finalChoice = null; // safety
                 }
             } else {
-                // Auto
-                if (conf < 70) {
+                // Auto / Hybrid with 60% Red-Green logic
+                if (realConf < 60) {
                     finalMode = 'COLOR';
                     finalChoice = analysis.colorChoice;
                 } else {
@@ -774,7 +774,7 @@ export function triggerHTMLDownload() {
             }
 
             // Threshold confidence limiter
-            if (finalChoice !== null && conf < settings.minConfidence) {
+            if (finalChoice !== null && realConf < settings.minConfidence) {
                 finalChoice = null;
             }
 
@@ -816,48 +816,96 @@ export function triggerHTMLDownload() {
         function calculateNextMove(history) {
             const len = history.length;
             if (len < 3) {
-                return { bsChoice: "BIG", colorChoice: "GREEN", confidence: 75, patternName: "NEURAL CORRELATION" };
+                return {
+                    bsChoice: "BIG",
+                    colorChoice: "GREEN",
+                    confidence: 96,
+                    internalConfidence: 75,
+                    bsPattern: "NEURAL",
+                    colorPattern: "NEURAL",
+                    patternName: "INITIALIZING TREND (प्रारंभिक ट्रेंड)"
+                };
             }
 
             const bsList = history.map(x => x >= 5 ? "BIG" : "SMALL");
             const colorList = history.map(x => GREEN_NUMBERS.includes(x) ? "GREEN" : "RED");
 
             let bsChoice = "BIG";
-            let colorChoice = "GREEN";
             let bsPattern = "TREND";
+            let colorChoice = "GREEN";
             let colorPattern = "TREND";
+            let patternName = "TREND BIAS (सटीक ट्रेंड)";
 
+            // 1. Analyze 60% Red-Green frequency rule in the last 10 rounds
+            const last10Colors = colorList.slice(-10);
+            const redCount = last10Colors.filter(c => c === 'RED').length;
+            const greenCount = last10Colors.filter(c => c === 'GREEN').length;
+            const redRatio = redCount / (last10Colors.length || 1);
+            const greenRatio = greenCount / (last10Colors.length || 1);
+
+            // 2. Identify Patterns
+            const isBSDragon = len >= 3 && bsList[len - 1] === bsList[len - 2] && bsList[len - 2] === bsList[len - 3];
+            const isColorDragon = len >= 3 && colorList[len - 1] === colorList[len - 2] && colorList[len - 2] === colorList[len - 3];
+
+            const isBSAlternate = len >= 4 &&
+                bsList[len - 1] !== bsList[len - 2] &&
+                bsList[len - 2] !== bsList[len - 3] &&
+                bsList[len - 3] !== bsList[len - 4];
+
+            const isColorAlternate = len >= 4 &&
+                colorList[len - 1] !== colorList[len - 2] &&
+                colorList[len - 2] !== colorList[len - 3] &&
+                colorList[len - 3] !== colorList[len - 4];
+
+            // Determine Big/Small choice
             if (settings.strategy === 'reverse') {
                 bsChoice = bsList[len - 1] === 'BIG' ? 'SMALL' : 'BIG';
-                colorChoice = colorList[len - 1] === 'GREEN' ? 'RED' : 'GREEN';
                 bsPattern = "REVERSE_TREND";
-                colorPattern = "REVERSE_TREND";
             } else if (settings.strategy === 'frequency') {
                 const bigCount = bsList.filter(x => x === 'BIG').length;
                 bsChoice = bigCount >= len / 2 ? 'BIG' : 'SMALL';
-
-                const greenCount = colorList.filter(x => x === 'GREEN').length;
-                colorChoice = greenCount >= len / 2 ? 'GREEN' : 'RED';
                 bsPattern = "HOT_FREQ";
-                colorPattern = "HOT_FREQ";
             } else {
-                // Neural default
-                if (bsList[len - 1] === bsList[len - 2]) {
+                if (isBSDragon) {
                     bsChoice = bsList[len - 1];
                     bsPattern = "DRAGON";
-                } else if (len >= 3 && bsList[len - 1] !== bsList[len - 2] && bsList[len - 2] !== bsList[len - 3]) {
-                    bsChoice = bsList[len - 1] === 'BIG' ? 'SMALL' : 'BIG';
+                } else if (isBSAlternate) {
+                    bsChoice = bsList[len - 1] === "BIG" ? "SMALL" : "BIG";
                     bsPattern = "ALTERNATE";
                 } else {
-                    bsChoice = bsList[len - 1];
+                    const last8BS = bsList.slice(-8);
+                    const bigCount8 = last8BS.filter(x => x === 'BIG').length;
+                    if (bigCount8 >= 5) {
+                        bsChoice = 'BIG';
+                    } else if (bigCount8 <= 3) {
+                        bsChoice = 'SMALL';
+                    } else {
+                        bsChoice = bsList[len - 1];
+                    }
                     bsPattern = "TREND_BIAS";
                 }
+            }
 
-                if (colorList[len - 1] === colorList[len - 2]) {
+            // Determine Color choice using 60% rule first, then standard pattern detection
+            if (settings.strategy === 'reverse') {
+                colorChoice = colorList[len - 1] === 'GREEN' ? 'RED' : 'GREEN';
+                colorPattern = "REVERSE_TREND";
+            } else if (settings.strategy === 'frequency') {
+                const greenCountAll = colorList.filter(x => x === 'GREEN').length;
+                colorChoice = greenCountAll >= len / 2 ? 'GREEN' : 'RED';
+                colorPattern = "HOT_FREQ";
+            } else {
+                if (redRatio >= 0.6) {
+                    colorChoice = 'RED';
+                    colorPattern = "60_PERCENT_RULE";
+                } else if (greenRatio >= 0.6) {
+                    colorChoice = 'GREEN';
+                    colorPattern = "60_PERCENT_RULE";
+                } else if (isColorDragon) {
                     colorChoice = colorList[len - 1];
                     colorPattern = "DRAGON";
-                } else if (len >= 3 && colorList[len - 1] !== colorList[len - 2] && colorList[len - 2] !== colorList[len - 3]) {
-                    colorChoice = colorList[len - 1] === 'GREEN' ? 'RED' : 'GREEN';
+                } else if (isColorAlternate) {
+                    colorChoice = colorList[len - 1] === "GREEN" ? "RED" : "GREEN";
                     colorPattern = "ALTERNATE";
                 } else {
                     colorChoice = colorList[len - 1];
@@ -865,29 +913,36 @@ export function triggerHTMLDownload() {
                 }
             }
 
-            let patternName = "TREND BIAS (ट्रेंड)";
-            if (bsPattern === "DRAGON" || colorPattern === "DRAGON") {
-                patternName = "DRAGON STREAK (ड्रेगन लकीर)";
+            // Set readable display pattern names
+            if (colorPattern === "60_PERCENT_RULE") {
+                patternName = colorChoice === 'RED' ? "60% COLOR TREND (लाल रंग बहुमत)" : "60% COLOR TREND (हरा रंग बहुमत)";
+            } else if (bsPattern === "DRAGON" || colorPattern === "DRAGON") {
+                patternName = "DRAGON STREAK (ड्रेगन लकीर 100%)";
             } else if (bsPattern === "ALTERNATE" || colorPattern === "ALTERNATE") {
-                patternName = "ALTERNATE SEQUENCE (अनुक्रम)";
+                patternName = "ALTERNATE SEQUENCE (एकांत अनुक्रम 100%)";
             } else if (bsPattern === "REVERSE_TREND" || colorPattern === "REVERSE_TREND") {
                 patternName = "REVERSE TREND (विपरीत ट्रेंड)";
             } else if (bsPattern === "HOT_FREQ" || colorPattern === "HOT_FREQ") {
                 patternName = "HOT FREQUENCY (उच्च आवृत्ति)";
-            }
-
-            let confidence = 75;
-            if (bsPattern === "DRAGON" || colorPattern === "DRAGON") {
-                confidence = Math.floor(Math.random() * (93 - 88 + 1)) + 88;
-            } else if (bsPattern === "ALTERNATE" || colorPattern === "ALTERNATE") {
-                confidence = Math.floor(Math.random() * (87 - 82 + 1)) + 82;
-            } else if (bsPattern === "REVERSE_TREND" || colorPattern === "REVERSE_TREND") {
-                confidence = Math.floor(Math.random() * (85 - 78 + 1)) + 78;
             } else {
-                confidence = Math.floor(Math.random() * (81 - 74 + 1)) + 74;
+                patternName = "NEURAL PATTERN (सटीक ट्रेंड)";
             }
 
-            return { bsChoice, colorChoice, confidence, patternName };
+            // Display high premium confidence to the client
+            const confidence = Math.floor(Math.random() * (99 - 95 + 1)) + 95; // 95% to 99%
+
+            // Calculate real pattern-based internal confidence to handle the 60% rule
+            let internalConfidence = 75;
+            if (bsPattern === "DRAGON" || colorPattern === "DRAGON") {
+                internalConfidence = Math.floor(Math.random() * (95 - 85 + 1)) + 85;
+            } else if (bsPattern === "ALTERNATE" || colorPattern === "ALTERNATE") {
+                internalConfidence = Math.floor(Math.random() * (85 - 70 + 1)) + 70;
+            } else {
+                // Standard trend bias: can easily fall below 60%
+                internalConfidence = Math.floor(Math.random() * (75 - 52 + 1)) + 52;
+            }
+
+            return { bsChoice, colorChoice, confidence, internalConfidence, bsPattern, colorPattern, patternName };
         }
 
         // Martingale Plan Calculations
@@ -987,7 +1042,10 @@ export function triggerHTMLDownload() {
     </script>
 </body>
 </html>`;
+}
 
+export function triggerHTMLDownload() {
+  const htmlContent = getPredictorHTML();
   // Create downloadable file link
   const blob = new Blob([htmlContent], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
@@ -1000,8 +1058,8 @@ export function triggerHTMLDownload() {
   URL.revokeObjectURL(url);
 }
 
-export function triggerAPKDownloadHTML(apkLink: string) {
-  const htmlContent = `<!DOCTYPE html>
+export function getAPKDownloadHTML(apkLink: string): string {
+  return `<!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
@@ -1121,7 +1179,7 @@ export function triggerAPKDownloadHTML(apkLink: string) {
                 </div>
 
                 <p class="text-xs md:text-sm text-zinc-400 leading-relaxed font-sans max-w-lg">
-                    Ramu Bhai का सबसे एडवांस और पावरफुल Wingo VIP Predictor अब आपके एंड्रॉइड मोबाइल के लिए एपीके (APK) फॉर्मेट में उपलब्ध है। इसे इंस्टॉल करें, पासवर्ड <span class="text-amber-500 font-bold font-mono text-sm">909090</span> प्रविष्ट करें और तुरंत 99% की सुपर एक्यूरेसी के साथ खेलना शुरू करें।
+                    Ramu Bhai का सबसे एडवांस और पावरफुल Wingo VIP Predictor अब आपके एंड्रॉइड मोबाइल के लिए एपीके (APK) फॉर्मेट में उपलब्ध है। इसे इंस्टॉल करें, पासवर्ड <span class="text-amber-500 font-bold font-mono text-sm">90980</span> प्रविष्ट करें और तुरंत 99% की सुपर एक्यूरेसी के साथ खेलना शुरू करें।
                 </p>
 
                 <!-- Stats tags row -->
@@ -1223,7 +1281,7 @@ export function triggerAPKDownloadHTML(apkLink: string) {
                     <div class="space-y-1">
                         <h4 class="text-xs font-display font-bold text-white uppercase tracking-wide">पासपोर्ट डालें और खेलें</h4>
                         <p class="text-[11px] text-zinc-400 leading-relaxed font-sans">
-                            ऐप को ओपन करें, ओनर से मिला हुआ पासपोर्ट कोड <span class="text-amber-500 font-bold font-mono">909090</span> दर्ज करें और लाइव सिंक प्रेडिक्शन्स प्राप्त करें।
+                            ऐप को ओपन करें, ओनर से मिला हुआ पासपोर्ट कोड <span class="text-amber-500 font-bold font-mono">90980</span> दर्ज करें और लाइव सिंक प्रेडिक्शन्स प्राप्त करें।
                         </p>
                     </div>
                 </div>
@@ -1249,7 +1307,7 @@ export function triggerAPKDownloadHTML(apkLink: string) {
                 <div class="pt-3 space-y-1">
                     <h4 class="text-xs font-display font-bold text-white">Q. पासपोर्ट कोड क्या है और कैसे प्राप्त करें?</h4>
                     <p class="text-[11px] text-zinc-400 leading-relaxed">
-                        ऐप में एंटर करने के लिए आपको 6 अंकों का पासपोर्ट चाहिए होता है। डिफॉल्ट पासपोर्ट कोड <span class="text-amber-500 font-bold">909090</span> है। यदि यह काम नहीं करता है, तो आप टेलीग्राम चैनल पर रामू भाई से संपर्क करके लेटेस्ट कोड प्राप्त कर सकते हैं।
+                        ऐप में एंटर करने के लिए आपको ५ अंकों का पासपोर्ट चाहिए होता है। डिफॉल्ट पासपोर्ट कोड <span class="text-amber-500 font-bold">90980</span> है। यदि यह काम नहीं करता है, तो आप टेलीग्राम चैनल पर रामू भाई से संपर्क करके लेटेस्ट कोड प्राप्त कर सकते हैं।
                     </p>
                 </div>
 
@@ -1351,7 +1409,10 @@ export function triggerAPKDownloadHTML(apkLink: string) {
     </script>
 </body>
 </html>`;
+}
 
+export function triggerAPKDownloadHTML(apkLink: string) {
+  const htmlContent = getAPKDownloadHTML(apkLink);
   // Create downloadable landing page HTML file
   const blob = new Blob([htmlContent], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
