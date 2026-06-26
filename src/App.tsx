@@ -435,8 +435,8 @@ export default function App() {
                 finalChoice = analysis.colorChoice;
               }
             } else {
-              // Auto / Hybrid with 60% Red-Green logic
-              if (realConf < 60) {
+              // Auto / Hybrid with 55% Red-Green logic (Prefer Big/Small)
+              if (realConf < 55) {
                 finalMode = 'COLOR';
                 finalChoice = analysis.colorChoice;
               } else {

@@ -763,8 +763,8 @@ export function getPredictorHTML(): string {
                     finalChoice = null; // safety
                 }
             } else {
-                // Auto / Hybrid with 60% Red-Green logic
-                if (realConf < 60) {
+                // Auto / Hybrid with 55% Red-Green logic (Prefer Big/Small)
+                if (realConf < 55) {
                     finalMode = 'COLOR';
                     finalChoice = analysis.colorChoice;
                 } else {
@@ -773,9 +773,14 @@ export function getPredictorHTML(): string {
                 }
             }
 
-            // Threshold confidence limiter
-            if (finalChoice !== null && realConf < settings.minConfidence) {
+            // Threshold confidence limiter (Only apply to Safe mode, never Auto/Hybrid)
+            if (finalChoice !== null && settings.predMode === 'safe' && realConf < settings.minConfidence) {
                 finalChoice = null;
+            }
+
+            if (finalChoice === null && settings.predMode !== 'safe') {
+                finalChoice = analysis.bsChoice;
+                finalMode = 'BS';
             }
 
             if (finalChoice !== null) {
