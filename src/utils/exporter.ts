@@ -71,6 +71,238 @@ export function getPredictorHTML(): string {
 </head>
 <body class="min-h-screen bg-[#020405] text-zinc-100 flex flex-col selection:bg-amber-500/30 selection:text-white pb-10">
 
+    <!-- 🔐 ACCESS SECURITY PORTAL (LOCK SCREEN) -->
+    <div id="offline-auth-screen" class="fixed inset-0 z-[999999] flex flex-col items-center justify-center bg-black/98 px-4 overflow-y-auto">
+        <div class="w-full max-w-md bg-neutral-950 border border-amber-500/50 rounded-3xl p-6 md:p-8 shadow-2xl text-center relative overflow-hidden">
+            <!-- Gold light sweeps -->
+            <div class="absolute -inset-y-12 w-8 bg-white/5 blur-xl -rotate-12 translate-x-[-120%] animate-[shimmer_3.5s_infinite_ease-in-out]"></div>
+
+            <div class="mx-auto w-16 h-16 bg-amber-500/10 border border-amber-500 rounded-full flex items-center justify-center mb-5 animate-pulse">
+                <i data-lucide="lock" class="w-8 h-8 text-amber-500"></i>
+            </div>
+
+            <h2 class="text-xl md:text-2xl font-display font-bold tracking-widest text-amber-500 mb-2 uppercase">
+                ACCESS SECURITY PORTAL
+            </h2>
+            <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-6 font-mono">
+                WINGO VIP PRO OFFLINE
+            </p>
+
+            <!-- WARNING BOX IN HINDI & ENGLISH -->
+            <div class="bg-red-950/20 border border-red-500/40 rounded-xl p-4 text-left mb-6 space-y-2">
+                <div class="flex items-center gap-1.5 text-red-400 text-xs font-bold uppercase tracking-wide">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-red-400"></i>
+                    महत्वपूर्ण चेतावनी (IMPORTANT WARNING):
+                </div>
+                <div class="text-[11px] text-zinc-300 leading-relaxed font-sans">
+                    यह पैनल पूरी तरह से पासवर्ड प्रोटेक्टेड है। पैनल को एक्टिवेट करने के लिए आपको <span class="text-amber-500 font-bold">वैलिड पासपोर्ट (Passport Code)</span> की आवश्यकता होगी। नीचे दिए गए ऑफिशियल टेलीग्राम बटन पर क्लिक करके सीधे ओनर से बात करें और अपना एक्टिवेशन पासवर्ड प्राप्त करें।
+                </div>
+            </div>
+
+            <!-- TELEGRAM LINK -->
+            <a href="https://t.me/+h5jDuTLxOEQ4NmVl" target="_blank" rel="noreferrer" class="flex items-center justify-center gap-2 w-full py-3.5 mb-6 bg-gradient-to-r from-sky-600 to-sky-500 hover:from-sky-500 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-lg">
+                ✈️ Contact Owner For Password
+            </a>
+
+            <form id="frmOfflineAuth" onsubmit="verifyOfflinePassport(event)" class="space-y-4">
+                <input
+                  id="offlinePassportCode"
+                  type="password"
+                  class="w-full bg-black border border-zinc-800 rounded-xl py-3.5 px-4 text-center text-amber-500 text-2xl font-bold tracking-[10px] focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 transition-all placeholder:text-zinc-800 placeholder:tracking-normal placeholder:text-sm"
+                  placeholder="••••••"
+                  maxlength="10"
+                />
+
+                <button
+                  type="submit"
+                  class="w-full bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black font-display font-bold text-xs py-3.5 rounded-xl transition-all uppercase tracking-widest cursor-pointer"
+                >
+                  Activate VIP Injector
+                </button>
+            </form>
+
+            <div id="offlineAuthError" class="hidden text-red-500 text-xs font-bold mt-4 flex items-center justify-center gap-1.5">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-red-500"></i> <span id="offlineAuthErrorTxt">INVALID PASSPORT CODE!</span>
+            </div>
+
+            <!-- ADMIN PORTAL TRIGGER -->
+            <button
+                type="button"
+                onclick="openOfflineAdmin()"
+                class="mt-6 text-[10px] text-zinc-600 hover:text-amber-500 uppercase tracking-widest transition-colors flex items-center justify-center gap-1.5 mx-auto cursor-pointer"
+            >
+                <i data-lucide="settings" class="w-3.5 h-3.5"></i> ADMIN PORTAL (एडमिन लॉगिन)
+            </button>
+        </div>
+    </div>
+
+    <!-- 🔄 CYBER SYSTEM LOADER -->
+    <div id="offline-loader-screen" class="hidden fixed inset-0 z-[999998] flex flex-col items-center justify-center bg-black">
+        <div class="relative flex flex-col items-center max-w-sm px-6">
+            <div class="w-24 h-24 rounded-full border-4 border-transparent border-t-amber-500 border-b-cyan-500 animate-spin"></div>
+            <div class="mt-8 text-center space-y-3">
+                <h3 class="text-cyan-400 font-display font-bold text-xs uppercase tracking-[3px] animate-pulse">
+                    INJECTING ALGORITHM CORE
+                </h3>
+                <p class="text-[9px] text-zinc-500 font-mono tracking-wider leading-relaxed">
+                    ESTABLISHING SECURE PROTOCOLS & CORRELATING REAL-TIME LOTTERY WHEEL FREQUENCY
+                </p>
+                <div class="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-800 p-[1px] mt-4">
+                    <div id="offlineLoaderProgress" class="bg-gradient-to-r from-amber-500 to-cyan-400 h-full w-[0%] transition-all duration-100"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔐 ADMIN PANEL CONTROL CENTER OVERLAY -->
+    <div id="offline-admin-screen" class="hidden fixed inset-0 z-[1000000] flex items-center justify-center bg-black/98 p-4 overflow-y-auto">
+        <div class="w-full max-w-lg bg-neutral-950 border border-zinc-800 rounded-3xl p-6 md:p-8 shadow-2xl relative">
+            <button
+                type="button"
+                onclick="closeOfflineAdmin()"
+                class="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 rounded-full hover:bg-zinc-900 transition-colors cursor-pointer"
+            >
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- Admin Login Box -->
+            <div id="offlineAdminLoginBox" class="text-center py-4">
+                <div class="mx-auto w-12 h-12 bg-amber-500/10 border border-amber-500/40 rounded-full flex items-center justify-center mb-4">
+                    <i data-lucide="lock" class="w-6 h-6 text-amber-500"></i>
+                </div>
+                <h3 class="text-lg font-display font-bold text-amber-500 uppercase tracking-wider mb-2">
+                    ADMIN VERIFICATION
+                </h3>
+                <p class="text-xs text-zinc-400 mb-6 font-sans">
+                    Please enter your master admin PIN code (90980) to access.
+                </p>
+
+                <form onsubmit="verifyOfflineAdmin(event)" class="space-y-4 max-w-sm mx-auto">
+                    <input
+                        id="offlineAdminPassword"
+                        type="password"
+                        class="w-full bg-black border border-zinc-850 rounded-xl py-3 px-4 text-center text-amber-500 text-lg font-bold tracking-[6px] focus:outline-none focus:border-amber-500 transition-all"
+                        placeholder="ADMIN PIN"
+                        maxlength="6"
+                    />
+                    <button
+                        type="submit"
+                        class="w-full bg-amber-500 hover:bg-amber-400 text-black font-display font-bold text-xs py-3 rounded-xl transition-all uppercase tracking-widest cursor-pointer"
+                    >
+                        Verify Admin
+                    </button>
+                </form>
+                <div id="offlineAdminError" class="hidden text-red-500 text-xs font-bold mt-4">
+                    INVALID MASTER PIN! ACCESS DENIED.
+                </div>
+            </div>
+
+            <!-- Admin Dashboard Panel -->
+            <div id="offlineAdminDashboard" class="hidden space-y-6">
+                <div class="flex items-center gap-2 border-b border-zinc-800 pb-4">
+                    <div class="p-1.5 bg-amber-500/10 border border-amber-500/45 rounded-lg">
+                        <i data-lucide="compass" class="w-5 h-5 text-amber-500"></i>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="text-sm font-display font-black text-white uppercase tracking-wider">
+                            PASSPORT GENERATOR DASHBOARD
+                        </h3>
+                        <p class="text-[9px] text-zinc-500 font-mono uppercase tracking-widest">
+                            RAMU BHAI INJECTOR CONTROL CENTER
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-amber-950/10 border border-amber-500/20 rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed font-sans text-left">
+                    <span class="text-amber-500 font-bold">How it works:</span> Create custom activation codes and assign validity. Default master codes <span class="text-white font-mono bg-zinc-900 px-1 py-0.5">90980</span>, <span class="text-white font-mono bg-zinc-900 px-1 py-0.5">909090</span>, and <span class="text-white font-mono bg-zinc-900 px-1 py-0.5">9090901</span> remain active forever.
+                </div>
+
+                <!-- Generate Form -->
+                <form onsubmit="createOfflinePasscode(event)" class="space-y-4 border border-zinc-900 bg-zinc-950/40 rounded-2xl p-4 text-left">
+                    <h4 class="text-xs font-display font-bold text-amber-500 uppercase tracking-widest">
+                        CREATE DYNAMIC PASSPORT CODE
+                    </h4>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="text-[9px] text-zinc-500 font-bold uppercase block">PASSPORT CODE (4-10 DIGITS)</label>
+                            <div class="flex gap-2">
+                                <input
+                                    id="offlineNewCode"
+                                    type="text"
+                                    placeholder="E.g. 543210"
+                                    class="w-full bg-black border border-zinc-850 rounded-xl px-3 py-2 text-xs text-amber-400 font-bold font-mono focus:outline-none focus:border-amber-500"
+                                    maxlength="10"
+                                />
+                                <button
+                                    type="button"
+                                    onclick="generateRandomOfflineCode()"
+                                    class="px-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-xl text-[10px] font-bold transition-all border border-zinc-800 cursor-pointer"
+                                >
+                                    Random
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="text-[9px] text-zinc-500 font-bold uppercase block">VALIDITY DURATION</label>
+                            <select
+                                id="offlineNewDuration"
+                                class="w-full bg-black border border-zinc-850 rounded-xl px-2 py-2.5 text-xs text-zinc-300 font-bold focus:outline-none focus:border-amber-500 cursor-pointer"
+                            >
+                                <option value="30m">30 Minutes (३० मिनट)</option>
+                                <option value="1h">1 Hour (१ घंटा)</option>
+                                <option value="12h">12 Hours (१२ घंटे)</option>
+                                <option value="1d">1 Day (१ दिन)</option>
+                                <option value="7d">7 Days (७ दिन)</option>
+                                <option value="30d">30 Days (३० दिन)</option>
+                                <option value="lifetime">Lifetime (आजीवन)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-display font-bold text-xs py-2.5 rounded-xl transition-all uppercase tracking-widest cursor-pointer"
+                    >
+                        Generate & Add Passport
+                    </button>
+                </form>
+
+                <!-- Passcodes Table -->
+                <div class="space-y-2 text-left">
+                    <div class="flex justify-between items-center px-1">
+                        <h4 class="text-xs font-display font-bold text-zinc-400 uppercase tracking-widest">
+                            ACTIVE CODES
+                        </h4>
+                        <button
+                          type="button"
+                          onclick="clearAllOfflineCodes()"
+                          class="text-[9px] text-rose-500 hover:text-rose-400 uppercase font-black tracking-widest cursor-pointer"
+                        >
+                          Clear All
+                        </button>
+                    </div>
+
+                    <div class="max-h-48 overflow-y-auto border border-zinc-900 rounded-xl bg-zinc-950/20">
+                        <table class="w-full text-left text-xs font-mono">
+                            <thead class="bg-zinc-950 text-zinc-500 text-[8px] uppercase tracking-wider sticky top-0">
+                                <tr>
+                                    <th class="p-3">CODE</th>
+                                    <th class="p-3">DURATION</th>
+                                    <th class="p-3 text-right">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody id="offlineCodesTableBody" class="divide-y divide-zinc-900">
+                                <!-- Loaded dynamically via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- TOP HEADER -->
     <header class="border-b border-zinc-900/80 bg-black/40 backdrop-blur-md sticky top-0 z-50 px-4 py-3.5">
         <div class="max-w-6xl mx-auto flex items-center justify-between">
@@ -1231,6 +1463,232 @@ export function getPredictorHTML(): string {
                 btn.innerText = "🛑 Stop Simulator";
                 btn.className = "text-[9px] font-mono font-bold uppercase bg-rose-950/40 hover:bg-rose-900/40 px-2 py-1 rounded border border-rose-500 text-rose-400 transition-all cursor-pointer animate-pulse";
             }
+        }
+
+        // Offline Security State & Passcodes
+        let offlinePasscodes = [];
+        try {
+            const saved = localStorage.getItem('ramu_offline_passcodes');
+            if (saved) offlinePasscodes = JSON.parse(saved);
+        } catch (e) {
+            offlinePasscodes = [];
+        }
+
+        function saveOfflinePasscodes() {
+            localStorage.setItem('ramu_offline_passcodes', JSON.stringify(offlinePasscodes));
+        }
+
+        function checkOfflinePasscodeValidity(code) {
+            const cleanCode = code.trim();
+            if (cleanCode === "90980" || cleanCode === "909090" || cleanCode === "9090901") {
+                return { isValid: true };
+            }
+            const match = offlinePasscodes.find(p => p.code === cleanCode);
+            if (!match) {
+                return { isValid: false, errorMsg: "INVALID PASSPORT CODE! (अमान्य पासपोर्ट कोड!)" };
+            }
+            if (match.expiresAt !== -1 && Date.now() > match.expiresAt) {
+                return { isValid: false, errorMsg: "PASSPORT EXPIRED! (पासपोर्ट की अवधि समाप्त हो गई है!)" };
+            }
+            return { isValid: true };
+        }
+
+        function verifyOfflinePassport(event) {
+            if (event) event.preventDefault();
+            const codeInput = document.getElementById('offlinePassportCode');
+            const errorDiv = document.getElementById('offlineAuthError');
+            const errorTxt = document.getElementById('offlineAuthErrorTxt');
+            const cleanCode = codeInput.value.trim();
+
+            const check = checkOfflinePasscodeValidity(cleanCode);
+            if (check.isValid) {
+                errorDiv.classList.add('hidden');
+                
+                // Show loader screen
+                const loader = document.getElementById('offline-loader-screen');
+                loader.classList.remove('hidden');
+                
+                let progress = 0;
+                const progressFill = document.getElementById('offlineLoaderProgress');
+                
+                const interval = setInterval(() => {
+                    progress += Math.floor(Math.random() * 8) + 4;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        setTimeout(() => {
+                            // Hide lock screen and loader
+                            document.getElementById('offline-auth-screen').classList.add('hidden');
+                            loader.classList.add('hidden');
+                            synth.playWin();
+                        }, 300);
+                    }
+                    progressFill.style.width = progress + '%';
+                }, 100);
+            } else {
+                errorDiv.classList.remove('hidden');
+                errorTxt.innerText = check.errorMsg || 'INVALID PASSPORT CODE! ACCESS DENIED.';
+                codeInput.value = '';
+                synth.playLoss();
+            }
+        }
+
+        // Offline Admin Controls
+        function openOfflineAdmin() {
+            document.getElementById('offline-admin-screen').classList.remove('hidden');
+            document.getElementById('offlineAdminLoginBox').classList.remove('hidden');
+            document.getElementById('offlineAdminDashboard').classList.add('hidden');
+            document.getElementById('offlineAdminError').classList.add('hidden');
+            document.getElementById('offlineAdminPassword').value = '';
+        }
+
+        function closeOfflineAdmin() {
+            document.getElementById('offline-admin-screen').classList.add('hidden');
+        }
+
+        function verifyOfflineAdmin(event) {
+            if (event) event.preventDefault();
+            const pin = document.getElementById('offlineAdminPassword').value.trim();
+            if (pin === '90980' || pin === '909090') {
+                document.getElementById('offlineAdminLoginBox').classList.add('hidden');
+                document.getElementById('offlineAdminDashboard').classList.remove('hidden');
+                renderOfflineCodes();
+                synth.playWin();
+            } else {
+                document.getElementById('offlineAdminError').classList.remove('hidden');
+                document.getElementById('offlineAdminPassword').value = '';
+                synth.playLoss();
+            }
+        }
+
+        function generateRandomOfflineCode() {
+            const code = Math.floor(100000 + Math.random() * 900000).toString();
+            document.getElementById('offlineNewCode').value = code;
+        }
+
+        function createOfflinePasscode(event) {
+            if (event) event.preventDefault();
+            const codeInput = document.getElementById('offlineNewCode');
+            const cleanCode = codeInput.value.trim().replace(/\s/g, '');
+            const duration = document.getElementById('offlineNewDuration').value;
+
+            if (!cleanCode || cleanCode.length < 4) {
+                alert("Please enter or generate a valid code (at least 4 digits)!");
+                return;
+            }
+
+            if (offlinePasscodes.some(p => p.code === cleanCode)) {
+                alert("This passcode already exists!");
+                return;
+            }
+
+            let durationMs = -1;
+            let durationLabel = 'Lifetime';
+            const now = Date.now();
+
+            switch (duration) {
+                case '30m':
+                    durationMs = 30 * 60 * 1000;
+                    durationLabel = '30 Min (३० मिनट)';
+                    break;
+                case '1h':
+                    durationMs = 60 * 60 * 1000;
+                    durationLabel = '1 Hour (१ घंटा)';
+                    break;
+                case '12h':
+                    durationMs = 12 * 60 * 60 * 1000;
+                    durationLabel = '12 Hours (१२ घंटे)';
+                    break;
+                case '1d':
+                    durationMs = 24 * 60 * 60 * 1000;
+                    durationLabel = '1 Day (१ दिन)';
+                    break;
+                case '7d':
+                    durationMs = 7 * 24 * 60 * 60 * 1000;
+                    durationLabel = '7 Days (७ दिन)';
+                    break;
+                case '30d':
+                    durationMs = 30 * 24 * 60 * 60 * 1000;
+                    durationLabel = '30 Days (३० दिन)';
+                    break;
+                default:
+                    durationMs = -1;
+                    durationLabel = 'Lifetime (आजीवन)';
+            }
+
+            const expiresAt = durationMs === -1 ? -1 : now + durationMs;
+
+            const newPasscode = {
+                code: cleanCode,
+                durationLabel,
+                createdAt: now,
+                expiresAt
+            };
+
+            offlinePasscodes.unshift(newPasscode);
+            saveOfflinePasscodes();
+            renderOfflineCodes();
+            codeInput.value = '';
+            synth.playWin();
+        }
+
+        function deleteOfflinePasscode(code) {
+            offlinePasscodes = offlinePasscodes.filter(p => p.code !== code);
+            saveOfflinePasscodes();
+            renderOfflineCodes();
+        }
+
+        function clearAllOfflineCodes() {
+            if (confirm("Are you sure you want to clear all codes?")) {
+                offlinePasscodes = [];
+                saveOfflinePasscodes();
+                renderOfflineCodes();
+            }
+        }
+
+        function renderOfflineCodes() {
+            const body = document.getElementById('offlineCodesTableBody');
+            body.innerHTML = '';
+            if (offlinePasscodes.length === 0) {
+                body.innerHTML = '<tr><td colspan="3" class="text-center py-6 text-zinc-600 text-xs uppercase tracking-widest font-mono">NO ACTIVE DYNAMIC PASSPORTS FOUND</td></tr>';
+                return;
+            }
+
+            offlinePasscodes.forEach(item => {
+                const isExpired = item.expiresAt !== -1 && Date.now() > item.expiresAt;
+                let remainingText = "Lifetime";
+                if (item.expiresAt !== -1) {
+                    const diff = item.expiresAt - Date.now();
+                    if (diff <= 0) {
+                        remainingText = "EXPIRED";
+                    } else {
+                        const mins = Math.floor(diff / 60000);
+                        const hrs = Math.floor(mins / 60);
+                        const days = Math.floor(hrs / 24);
+                        if (days > 0) {
+                            remainingText = days + "d " + (hrs % 24) + "h remaining";
+                        } else if (hrs > 0) {
+                            remainingText = hrs + "h " + (mins % 60) + "m remaining";
+                        } else {
+                            remainingText = mins + "m remaining";
+                        }
+                    }
+                }
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-zinc-900/30";
+                tr.innerHTML = '<td class="p-3 font-bold text-amber-500">' + item.code + '</td>' +
+                    '<td class="p-3">' +
+                        '<span class="text-zinc-300 font-sans block text-[11px]">' + item.durationLabel + '</span>' +
+                        '<span class="text-[9px] block ' + (isExpired ? 'text-red-500 font-bold' : 'text-zinc-500') + '">' +
+                            remainingText +
+                        '</span>' +
+                    '</td>' +
+                    '<td class="p-3 text-right">' +
+                        '<button type="button" onclick="deleteOfflinePasscode(\'' + item.code + '\')" class="text-[10px] text-zinc-500 hover:text-red-500 transition-colors uppercase font-black cursor-pointer">Delete</button>' +
+                    '</td>';
+                body.appendChild(tr);
+            });
         }
 
         // Initialize state on load
