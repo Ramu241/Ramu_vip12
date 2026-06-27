@@ -27,9 +27,7 @@ import {
   Coins,
   Tv,
   HelpCircle,
-  Calculator,
-  Settings,
-  Trash2
+  Calculator
 } from 'lucide-react';
 import { WingoMode, PredictionType, PredictionValue, HistoryRecord, JackpotRecord, ChannelState } from './types';
 
@@ -133,145 +131,12 @@ const INITIAL_CHANNELS = (): Record<WingoMode, ChannelState> => ({
   }
 });
 
-export interface DynamicPasscode {
-  code: string;
-  durationLabel: string;
-  createdAt: number;
-  expiresAt: number; // timestamp, or -1 for lifetime
-}
-
 export default function App() {
   const [authState, setAuthState] = useState<'LOCKED' | 'LOADING' | 'UNLOCKED'>('LOCKED');
   const [passportCode, setPassportCode] = useState('');
   const [authError, setAuthError] = useState(false);
-  const [authErrorMsg, setAuthErrorMsg] = useState('INVALID PASSPORT CODE! ACCESS DENIED.');
   const [loaderProgress, setLoaderProgress] = useState(0);
   const [activeMode, setActiveMode] = useState<WingoMode>('30s');
-  
-  // Admin Panel states
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
-  const [adminPassword, setAdminPassword] = useState('');
-  const [isAdminUnlocked, setIsAdminUnlocked] = useState(false);
-  const [adminError, setAdminError] = useState(false);
-  const [adminNewCode, setAdminNewCode] = useState('');
-  const [adminNewDuration, setAdminNewDuration] = useState('1d'); // '30m' | '1h' | '12h' | '1d' | '7d' | 'lifetime'
-  
-  // Dynamic passcodes list loaded from localStorage
-  const [dynamicPasscodes, setDynamicPasscodes] = useState<DynamicPasscode[]>(() => {
-    try {
-      const saved = localStorage.getItem('ramu_dynamic_passcodes');
-      return saved ? JSON.parse(saved) : [];
-    } catch (e) {
-      return [];
-    }
-  });
-
-  // Save passcodes to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('ramu_dynamic_passcodes', JSON.stringify(dynamicPasscodes));
-  }, [dynamicPasscodes]);
-
-  const checkPasscodeValidity = (code: string): { isValid: boolean; errorMsg?: string } => {
-    const cleanCode = code.trim();
-    // Default master codes
-    if (cleanCode === "90980" || cleanCode === "909090" || cleanCode === "9090901") {
-      return { isValid: true };
-    }
-
-    const match = dynamicPasscodes.find(p => p.code === cleanCode);
-    if (!match) {
-      return { isValid: false, errorMsg: "INVALID PASSPORT CODE! (अमान्य पासपोर्ट कोड!)" };
-    }
-
-    if (match.expiresAt !== -1 && Date.now() > match.expiresAt) {
-      return { isValid: false, errorMsg: "PASSPORT EXPIRED! (पासपोर्ट की अवधि समाप्त हो गई है!)" };
-    }
-
-    return { isValid: true };
-  };
-
-  const handleAdminLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (adminPassword.trim() === '90980' || adminPassword.trim() === '909090') {
-      setIsAdminUnlocked(true);
-      setAdminError(false);
-      audio.playAuthSuccess();
-    } else {
-      setAdminError(true);
-      setAdminPassword('');
-      audio.playLoss();
-    }
-  };
-
-  const handleGenerateRandomCode = () => {
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    setAdminNewCode(code);
-  };
-
-  const handleCreatePasscode = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleanCode = adminNewCode.trim().replace(/\s/g, '');
-    if (!cleanCode || cleanCode.length < 4) {
-      alert("Please enter or generate a valid code (at least 4 digits)!");
-      return;
-    }
-
-    if (dynamicPasscodes.some(p => p.code === cleanCode)) {
-      alert("This passcode already exists!");
-      return;
-    }
-
-    let durationMs = -1;
-    let durationLabel = 'Lifetime';
-    const now = Date.now();
-
-    switch (adminNewDuration) {
-      case '30m':
-        durationMs = 30 * 60 * 1000;
-        durationLabel = '30 Min (३० मिनट)';
-        break;
-      case '1h':
-        durationMs = 60 * 60 * 1000;
-        durationLabel = '1 Hour (१ घंटा)';
-        break;
-      case '12h':
-        durationMs = 12 * 60 * 60 * 1000;
-        durationLabel = '12 Hours (१२ घंटे)';
-        break;
-      case '1d':
-        durationMs = 24 * 60 * 60 * 1000;
-        durationLabel = '1 Day (१ दिन)';
-        break;
-      case '7d':
-        durationMs = 7 * 24 * 60 * 60 * 1000;
-        durationLabel = '7 Days (७ दिन)';
-        break;
-      case '30d':
-        durationMs = 30 * 24 * 60 * 60 * 1000;
-        durationLabel = '30 Days (३० दिन)';
-        break;
-      default:
-        durationMs = -1;
-        durationLabel = 'Lifetime (आजीवन)';
-    }
-
-    const expiresAt = durationMs === -1 ? -1 : now + durationMs;
-
-    const newPasscode: DynamicPasscode = {
-      code: cleanCode,
-      durationLabel,
-      createdAt: now,
-      expiresAt
-    };
-
-    setDynamicPasscodes(prev => [newPasscode, ...prev]);
-    setAdminNewCode('');
-    audio.playAuthSuccess();
-  };
-
-  const handleDeletePasscode = (codeToDelete: string) => {
-    setDynamicPasscodes(prev => prev.filter(p => p.code !== codeToDelete));
-  };
   const [channels, setChannels] = useState<Record<WingoMode, ChannelState>>(INITIAL_CHANNELS());
   const [clockTime, setClockTime] = useState('00:00:00 PM');
   
@@ -850,8 +715,7 @@ export default function App() {
   const verifyPassport = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const cleanCode = passportCode.trim();
-    const check = checkPasscodeValidity(cleanCode);
-    if (check.isValid) {
+    if (cleanCode === "90980" || cleanCode === "909090" || cleanCode === "9090901") {
       setAuthError(false);
       setAuthState('LOADING');
       audio.playAuthSuccess();
@@ -871,7 +735,6 @@ export default function App() {
       }, 100);
     } else {
       setAuthError(true);
-      setAuthErrorMsg(check.errorMsg || 'INVALID PASSPORT CODE! ACCESS DENIED.');
       setPassportCode('');
       audio.playLoss();
     }
@@ -972,254 +835,12 @@ export default function App() {
                 <motion.div
                   initial={{ opacity: 0, y: -5 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-red-500 text-xs font-bold mt-4 flex flex-col items-center justify-center gap-1 text-center font-sans"
+                  className="text-red-500 text-xs font-bold mt-4 flex items-center justify-center gap-1.5"
                 >
-                  <div className="flex items-center gap-1.5">
-                    <AlertTriangle className="w-4 h-4 text-red-500" /> {authErrorMsg}
-                  </div>
+                  <AlertTriangle className="w-4 h-4" /> INVALID PASSPORT CODE! ACCESS DENIED.
                 </motion.div>
               )}
-
-              {/* ADMIN LOGIN TRIGGER */}
-              <button
-                type="button"
-                onClick={() => {
-                  setIsAdminOpen(true);
-                  setAdminError(false);
-                  setIsAdminUnlocked(false);
-                  setAdminPassword('');
-                }}
-                className="mt-6 text-[10px] text-zinc-600 hover:text-amber-500 uppercase tracking-widest transition-colors flex items-center justify-center gap-1.5 mx-auto cursor-pointer"
-              >
-                <Settings className="w-3.5 h-3.5" /> ADMIN PORTAL (एडमिन लॉगिन)
-              </button>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* 🔐 ADMIN PANEL CONTROL CENTER OVERLAY */}
-      <AnimatePresence>
-        {isAdminOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[1000000] flex items-center justify-center bg-black/98 p-4 overflow-y-auto"
-          >
-            <div className="w-full max-w-lg bg-neutral-950 border border-zinc-800 rounded-3xl p-6 md:p-8 shadow-2xl relative">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsAdminOpen(false);
-                  setIsAdminUnlocked(false);
-                }}
-                className="absolute top-4 right-4 text-zinc-400 hover:text-white p-1 rounded-full hover:bg-zinc-900 transition-colors cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              {!isAdminUnlocked ? (
-                // Admin Password Login Screen
-                <div className="text-center py-4">
-                  <div className="mx-auto w-12 h-12 bg-amber-500/10 border border-amber-500/40 rounded-full flex items-center justify-center mb-4">
-                    <Lock className="w-6 h-6 text-amber-500" />
-                  </div>
-                  <h3 className="text-lg font-display font-bold text-amber-500 uppercase tracking-wider mb-2">
-                    ADMIN VERIFICATION
-                  </h3>
-                  <p className="text-xs text-zinc-400 mb-6 font-sans">
-                    Please enter your master admin PIN code (90980) to access.
-                  </p>
-
-                  <form onSubmit={handleAdminLogin} className="space-y-4 max-w-sm mx-auto">
-                    <input
-                      type="password"
-                      value={adminPassword}
-                      onChange={(e) => {
-                        setAdminPassword(e.target.value.replace(/\D/g, ''));
-                        setAdminError(false);
-                      }}
-                      className="w-full bg-black border border-zinc-850 rounded-xl py-3 px-4 text-center text-amber-500 text-lg font-bold tracking-[6px] focus:outline-none focus:border-amber-500 transition-all placeholder:tracking-normal placeholder:text-sm"
-                      placeholder="ADMIN PIN"
-                      maxLength={6}
-                    />
-                    <button
-                      type="submit"
-                      className="w-full bg-amber-500 hover:bg-amber-400 text-black font-display font-bold text-xs py-3 rounded-xl transition-all uppercase tracking-widest cursor-pointer"
-                    >
-                      Verify Admin
-                    </button>
-                  </form>
-
-                  {adminError && (
-                    <p className="text-red-500 text-xs font-bold mt-4">
-                      INVALID MASTER PIN! ACCESS DENIED.
-                    </p>
-                  )}
-                </div>
-              ) : (
-                // Admin Dashboard / Generator Panel
-                <div className="space-y-6">
-                  <div className="flex items-center gap-2 border-b border-zinc-800 pb-4">
-                    <div className="p-1.5 bg-amber-500/10 border border-amber-500/45 rounded-lg">
-                      <Compass className="w-5 h-5 text-amber-500" />
-                    </div>
-                    <div className="text-left">
-                      <h3 className="text-sm font-display font-black text-white uppercase tracking-wider">
-                        PASSPORT GENERATOR DASHBOARD
-                      </h3>
-                      <p className="text-[9px] text-zinc-500 font-mono uppercase tracking-widest">
-                        RAMU BHAI INJECTOR CONTROL CENTER
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Quick Info Alerts */}
-                  <div className="bg-amber-950/10 border border-amber-500/20 rounded-xl p-3 text-[11px] text-zinc-400 leading-relaxed font-sans text-left">
-                    <span className="text-amber-500 font-bold">How it works:</span> Create custom activation codes and assign their validity duration. Clients will enter these codes on the login screen. Default master codes <span className="text-white font-mono bg-zinc-900 px-1 py-0.5 rounded">90980</span>, <span className="text-white font-mono bg-zinc-900 px-1 py-0.5 rounded">909090</span>, and <span className="text-white font-mono bg-zinc-900 px-1 py-0.5 rounded">9090901</span> remain active forever.
-                  </div>
-
-                  {/* Generate Code Form */}
-                  <form onSubmit={handleCreatePasscode} className="space-y-4 border border-zinc-900 bg-zinc-950/40 rounded-2xl p-4 text-left">
-                    <h4 className="text-xs font-display font-bold text-amber-500 uppercase tracking-widest">
-                      CREATE DYNAMIC PASSPORT CODE
-                    </h4>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <label className="text-[9px] text-zinc-500 font-bold uppercase block">PASSPORT CODE (4-10 DIGITS)</label>
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={adminNewCode}
-                            onChange={(e) => setAdminNewCode(e.target.value.replace(/\D/g, ''))}
-                            placeholder="E.g. 543210"
-                            className="w-full bg-black border border-zinc-850 rounded-xl px-3 py-2 text-xs text-amber-400 font-bold font-mono focus:outline-none focus:border-amber-500"
-                            maxLength={10}
-                          />
-                          <button
-                            type="button"
-                            onClick={handleGenerateRandomCode}
-                            className="px-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-xl text-[10px] font-bold transition-all border border-zinc-800 cursor-pointer"
-                          >
-                            Random
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <label className="text-[9px] text-zinc-500 font-bold uppercase block">VALIDITY DURATION</label>
-                        <select
-                          value={adminNewDuration}
-                          onChange={(e) => setAdminNewDuration(e.target.value)}
-                          className="w-full bg-black border border-zinc-850 rounded-xl px-2 py-2.5 text-xs text-zinc-300 font-bold focus:outline-none focus:border-amber-500 cursor-pointer"
-                        >
-                          <option value="30m">30 Minutes (३० मिनट)</option>
-                          <option value="1h">1 Hour (१ घंटा)</option>
-                          <option value="12h">12 Hours (१२ घंटे)</option>
-                          <option value="1d">1 Day (१ दिन)</option>
-                          <option value="7d">7 Days (७ दिन)</option>
-                          <option value="30d">30 Days (३० दिन)</option>
-                          <option value="lifetime">Lifetime (आजीवन)</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-display font-bold text-xs py-2.5 rounded-xl transition-all uppercase tracking-widest cursor-pointer"
-                    >
-                      Generate & Add Passport
-                    </button>
-                  </form>
-
-                  {/* Active Passcodes Table */}
-                  <div className="space-y-2 text-left">
-                    <div className="flex justify-between items-center px-1">
-                      <h4 className="text-xs font-display font-bold text-zinc-400 uppercase tracking-widest">
-                        ACTIVE CODES ({dynamicPasscodes.length})
-                      </h4>
-                      {dynamicPasscodes.length > 0 && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (confirm("Are you sure you want to clear all codes?")) {
-                              setDynamicPasscodes([]);
-                            }
-                          }}
-                          className="text-[9px] text-rose-500 hover:text-rose-400 uppercase font-black tracking-widest cursor-pointer"
-                        >
-                          Clear All
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="max-h-48 overflow-y-auto border border-zinc-900 rounded-xl bg-zinc-950/20">
-                      {dynamicPasscodes.length === 0 ? (
-                        <div className="text-center py-6 text-zinc-600 text-xs uppercase tracking-widest font-mono">
-                          NO ACTIVE DYNAMIC PASSPORTS FOUND
-                        </div>
-                      ) : (
-                        <table className="w-full text-left text-xs font-mono">
-                          <thead className="bg-zinc-950 text-zinc-500 text-[8px] uppercase tracking-wider sticky top-0">
-                            <tr>
-                              <th className="p-3">CODE</th>
-                              <th className="p-3">DURATION</th>
-                              <th className="p-3 text-right">ACTION</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-zinc-900">
-                            {dynamicPasscodes.map((item) => {
-                              const isExpired = item.expiresAt !== -1 && Date.now() > item.expiresAt;
-                              let remainingText = "Lifetime";
-                              if (item.expiresAt !== -1) {
-                                const diff = item.expiresAt - Date.now();
-                                if (diff <= 0) {
-                                  remainingText = "EXPIRED";
-                                } else {
-                                  const mins = Math.floor(diff / 60000);
-                                  const hrs = Math.floor(mins / 60);
-                                  const days = Math.floor(hrs / 24);
-                                  if (days > 0) {
-                                    remainingText = `${days}d ${hrs % 24}h remaining`;
-                                  } else if (hrs > 0) {
-                                    remainingText = `${hrs}h ${mins % 60}m remaining`;
-                                  } else {
-                                    remainingText = `${mins}m remaining`;
-                                  }
-                                }
-                              }
-
-                              return (
-                                <tr key={item.code} className="hover:bg-zinc-900/30">
-                                  <td className="p-3 font-bold text-amber-500">{item.code}</td>
-                                  <td className="p-3">
-                                    <span className="text-zinc-300 font-sans block text-[11px]">{item.durationLabel}</span>
-                                    <span className={`text-[9px] block ${isExpired ? 'text-red-500 font-bold' : 'text-zinc-500'}`}>
-                                      {remainingText}
-                                    </span>
-                                  </td>
-                                  <td className="p-3 text-right">
-                                    <button
-                                      type="button"
-                                      onClick={() => handleDeletePasscode(item.code)}
-                                      className="text-[10px] text-zinc-500 hover:text-red-500 transition-colors uppercase font-black cursor-pointer"
-                                    >
-                                      Delete
-                                    </button>
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
