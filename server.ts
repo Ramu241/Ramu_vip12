@@ -39,10 +39,6 @@ async function startServer() {
       const qMode = req.query.mode;
       if (qMode === "1m") {
         mode = "WinGo_1M";
-      } else if (qMode === "3m") {
-        mode = "WinGo_3M";
-      } else if (qMode === "5m") {
-        mode = "WinGo_5M";
       } else {
         mode = "WinGo_30S";
       }

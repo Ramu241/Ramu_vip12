@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-export type WingoMode = '30s' | '1m' | '3m' | '5m';
+export type WingoMode = '30s' | '1m';
 
 export type PredictionType = 'BS' | 'COLOR';
 
@@ -33,7 +33,6 @@ export interface ChannelState {
   lastVerifiedIssue: string;
   lastPredType: PredictionType;
   lastPredVal: PredictionValue | null;
-  lastPredColorVal: 'RED' | 'GREEN' | null;
   lastPredPeriod: string;
   lastPredBalls: number[];
   serverHistory: number[];

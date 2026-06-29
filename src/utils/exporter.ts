@@ -371,18 +371,6 @@ export function getPredictorHTML(): string {
                         </div>
                         <input oninput="updateSettingsSlider(this.value)" id="rangeMinConf" type="range" min="70" max="95" step="5" value="75" class="w-full accent-amber-500 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer" />
                     </div>
-
-                    <!-- RAMU BHAI RIGGING ENGINE CONTROL -->
-                    <div class="space-y-1.5 pt-3 border-t border-zinc-900/50">
-                        <label class="text-[9px] text-amber-500 font-mono font-black uppercase block flex items-center gap-1">🛠️ रामू भाई सीक्रेट सेटिंग्स (HACK CONTROL)</label>
-                        <select onchange="updateSettings()" id="selRigMode" class="w-full bg-zinc-900 border border-zinc-800 p-2 rounded text-xs font-mono text-zinc-300 font-bold focus:outline-none cursor-pointer">
-                            <option value="scam">👹 Loss 100% (Hide Loss) - एक्टिव</option>
-                            <option value="fair">🟢 100% Fair Mode - बंद</option>
-                        </select>
-                        <span id="txtRigInfo" class="text-[8px] text-zinc-500 font-sans leading-tight block uppercase">
-                            हैक चालू है: ग्राहकों का 100% नुकसान होगा लेकिन स्क्रीन पर हमेशा WIN/JACKPOT दिखेगा!
-                        </span>
-                    </div>
                 </div>
 
                 <!-- EXPORT & DOCUMENTATION SUPPORT -->
@@ -531,8 +519,7 @@ export function getPredictorHTML(): string {
         const settings = {
             predMode: 'auto',
             strategy: 'neural',
-            minConfidence: 75,
-            rigMode: 'scam'
+            minConfidence: 75
         };
 
         let autoSimInterval = null;
@@ -695,21 +682,10 @@ export function getPredictorHTML(): string {
                 const actualColor = GREEN_NUMBERS.includes(num) ? 'GREEN' : 'RED';
 
                 let isWin = false;
-                if (settings.rigMode === 'scam') {
-                    ch.lastPredVal = ch.lastPredType === 'BS' ? actualBS : actualColor;
-                    isWin = true;
-                    if (Math.random() < 0.25) {
-                        if (!ch.lastPredBalls.includes(num)) {
-                            const otherNum = Math.floor(Math.random() * 10);
-                            ch.lastPredBalls = [num, otherNum].sort((a, b) => a - b);
-                        }
-                    }
-                } else {
-                    if (ch.lastPredType === 'BS') {
-                        isWin = (ch.lastPredVal === actualBS);
-                    } else if (ch.lastPredType === 'COLOR') {
-                        isWin = (ch.lastPredVal === actualColor);
-                    }
+                if (ch.lastPredType === 'BS') {
+                    isWin = (ch.lastPredVal === actualBS);
+                } else if (ch.lastPredType === 'COLOR') {
+                    isWin = (ch.lastPredVal === actualColor);
                 }
 
                 const isJackpot = ch.lastPredBalls.includes(num);
@@ -787,8 +763,8 @@ export function getPredictorHTML(): string {
                     finalChoice = null; // safety
                 }
             } else {
-                // Auto / Hybrid with 55% Red-Green logic (Prefer Big/Small)
-                if (realConf < 55) {
+                // Auto / Hybrid with 60% Red-Green logic
+                if (realConf < 60) {
                     finalMode = 'COLOR';
                     finalChoice = analysis.colorChoice;
                 } else {
@@ -797,24 +773,12 @@ export function getPredictorHTML(): string {
                 }
             }
 
-            // Threshold confidence limiter (Only apply to Safe mode, never Auto/Hybrid)
-            if (finalChoice !== null && settings.predMode === 'safe' && realConf < settings.minConfidence) {
+            // Threshold confidence limiter
+            if (finalChoice !== null && realConf < settings.minConfidence) {
                 finalChoice = null;
             }
 
-            if (finalChoice === null && settings.predMode !== 'safe') {
-                finalChoice = analysis.bsChoice;
-                finalMode = 'BS';
-            }
-
             if (finalChoice !== null) {
-                if (settings.rigMode === 'scam') {
-                    if (finalMode === 'BS') {
-                        finalChoice = finalChoice === 'BIG' ? 'SMALL' : 'BIG';
-                    } else {
-                        finalChoice = finalChoice === 'GREEN' ? 'RED' : 'GREEN';
-                    }
-                }
                 ch.lastPredType = finalMode;
                 ch.lastPredVal = finalChoice;
                 ch.confidence = conf + "%";
@@ -822,16 +786,20 @@ export function getPredictorHTML(): string {
 
                 if (finalChoice === 'BIG') {
                     const bigPool = [5, 6, 7, 8, 9].sort(() => 0.5 - Math.random());
-                    ch.lastPredBalls = [bigPool[0], bigPool[1]].sort((a, b) => a - b);
+                    const smallPool = [0, 1, 2, 3, 4].sort(() => 0.5 - Math.random());
+                    ch.lastPredBalls = [bigPool[0], smallPool[0]].sort((a, b) => a - b);
                 } else if (finalChoice === 'SMALL') {
                     const smallPool = [0, 1, 2, 3, 4].sort(() => 0.5 - Math.random());
-                    ch.lastPredBalls = [smallPool[0], smallPool[1]].sort((a, b) => a - b);
+                    const bigPool = [5, 6, 7, 8, 9].sort(() => 0.5 - Math.random());
+                    ch.lastPredBalls = [smallPool[0], bigPool[0]].sort((a, b) => a - b);
                 } else if (finalChoice === 'GREEN') {
-                    const gPool = [1, 3, 5, 7, 9].sort(() => 0.5 - Math.random());
-                    ch.lastPredBalls = [gPool[0], gPool[1]].sort((a, b) => a - b);
-                } else if (finalChoice === 'RED') {
+                    const gPool = [1, 3, 7, 9].sort(() => 0.5 - Math.random());
                     const rPool = [0, 2, 4, 6, 8].sort(() => 0.5 - Math.random());
-                    ch.lastPredBalls = [rPool[0], rPool[1]].sort((a, b) => a - b);
+                    ch.lastPredBalls = [gPool[0], rPool[0]].sort((a, b) => a - b);
+                } else if (finalChoice === 'RED') {
+                    const rPool = [2, 4, 6, 8].sort(() => 0.5 - Math.random());
+                    const gPool = [1, 3, 5, 7, 9].sort(() => 0.5 - Math.random());
+                    ch.lastPredBalls = [rPool[0], gPool[0]].sort((a, b) => a - b);
                 }
             } else {
                 ch.lastPredVal = null;
@@ -848,96 +816,48 @@ export function getPredictorHTML(): string {
         function calculateNextMove(history) {
             const len = history.length;
             if (len < 3) {
-                return {
-                    bsChoice: "BIG",
-                    colorChoice: "GREEN",
-                    confidence: 96,
-                    internalConfidence: 75,
-                    bsPattern: "NEURAL",
-                    colorPattern: "NEURAL",
-                    patternName: "INITIALIZING TREND (प्रारंभिक ट्रेंड)"
-                };
+                return { bsChoice: "BIG", colorChoice: "GREEN", confidence: 75, patternName: "NEURAL CORRELATION" };
             }
 
             const bsList = history.map(x => x >= 5 ? "BIG" : "SMALL");
             const colorList = history.map(x => GREEN_NUMBERS.includes(x) ? "GREEN" : "RED");
 
             let bsChoice = "BIG";
-            let bsPattern = "TREND";
             let colorChoice = "GREEN";
+            let bsPattern = "TREND";
             let colorPattern = "TREND";
-            let patternName = "TREND BIAS (सटीक ट्रेंड)";
 
-            // 1. Analyze 60% Red-Green frequency rule in the last 10 rounds
-            const last10Colors = colorList.slice(-10);
-            const redCount = last10Colors.filter(c => c === 'RED').length;
-            const greenCount = last10Colors.filter(c => c === 'GREEN').length;
-            const redRatio = redCount / (last10Colors.length || 1);
-            const greenRatio = greenCount / (last10Colors.length || 1);
-
-            // 2. Identify Patterns
-            const isBSDragon = len >= 3 && bsList[len - 1] === bsList[len - 2] && bsList[len - 2] === bsList[len - 3];
-            const isColorDragon = len >= 3 && colorList[len - 1] === colorList[len - 2] && colorList[len - 2] === colorList[len - 3];
-
-            const isBSAlternate = len >= 4 &&
-                bsList[len - 1] !== bsList[len - 2] &&
-                bsList[len - 2] !== bsList[len - 3] &&
-                bsList[len - 3] !== bsList[len - 4];
-
-            const isColorAlternate = len >= 4 &&
-                colorList[len - 1] !== colorList[len - 2] &&
-                colorList[len - 2] !== colorList[len - 3] &&
-                colorList[len - 3] !== colorList[len - 4];
-
-            // Determine Big/Small choice
             if (settings.strategy === 'reverse') {
                 bsChoice = bsList[len - 1] === 'BIG' ? 'SMALL' : 'BIG';
+                colorChoice = colorList[len - 1] === 'GREEN' ? 'RED' : 'GREEN';
                 bsPattern = "REVERSE_TREND";
+                colorPattern = "REVERSE_TREND";
             } else if (settings.strategy === 'frequency') {
                 const bigCount = bsList.filter(x => x === 'BIG').length;
                 bsChoice = bigCount >= len / 2 ? 'BIG' : 'SMALL';
-                bsPattern = "HOT_FREQ";
-            } else {
-                if (isBSDragon) {
-                    bsChoice = bsList[len - 1];
-                    bsPattern = "DRAGON";
-                } else if (isBSAlternate) {
-                    bsChoice = bsList[len - 1] === "BIG" ? "SMALL" : "BIG";
-                    bsPattern = "ALTERNATE";
-                } else {
-                    const last8BS = bsList.slice(-8);
-                    const bigCount8 = last8BS.filter(x => x === 'BIG').length;
-                    if (bigCount8 >= 5) {
-                        bsChoice = 'BIG';
-                    } else if (bigCount8 <= 3) {
-                        bsChoice = 'SMALL';
-                    } else {
-                        bsChoice = bsList[len - 1];
-                    }
-                    bsPattern = "TREND_BIAS";
-                }
-            }
 
-            // Determine Color choice using 60% rule first, then standard pattern detection
-            if (settings.strategy === 'reverse') {
-                colorChoice = colorList[len - 1] === 'GREEN' ? 'RED' : 'GREEN';
-                colorPattern = "REVERSE_TREND";
-            } else if (settings.strategy === 'frequency') {
-                const greenCountAll = colorList.filter(x => x === 'GREEN').length;
-                colorChoice = greenCountAll >= len / 2 ? 'GREEN' : 'RED';
+                const greenCount = colorList.filter(x => x === 'GREEN').length;
+                colorChoice = greenCount >= len / 2 ? 'GREEN' : 'RED';
+                bsPattern = "HOT_FREQ";
                 colorPattern = "HOT_FREQ";
             } else {
-                if (redRatio >= 0.6) {
-                    colorChoice = 'RED';
-                    colorPattern = "60_PERCENT_RULE";
-                } else if (greenRatio >= 0.6) {
-                    colorChoice = 'GREEN';
-                    colorPattern = "60_PERCENT_RULE";
-                } else if (isColorDragon) {
+                // Neural default
+                if (bsList[len - 1] === bsList[len - 2]) {
+                    bsChoice = bsList[len - 1];
+                    bsPattern = "DRAGON";
+                } else if (len >= 3 && bsList[len - 1] !== bsList[len - 2] && bsList[len - 2] !== bsList[len - 3]) {
+                    bsChoice = bsList[len - 1] === 'BIG' ? 'SMALL' : 'BIG';
+                    bsPattern = "ALTERNATE";
+                } else {
+                    bsChoice = bsList[len - 1];
+                    bsPattern = "TREND_BIAS";
+                }
+
+                if (colorList[len - 1] === colorList[len - 2]) {
                     colorChoice = colorList[len - 1];
                     colorPattern = "DRAGON";
-                } else if (isColorAlternate) {
-                    colorChoice = colorList[len - 1] === "GREEN" ? "RED" : "GREEN";
+                } else if (len >= 3 && colorList[len - 1] !== colorList[len - 2] && colorList[len - 2] !== colorList[len - 3]) {
+                    colorChoice = colorList[len - 1] === 'GREEN' ? 'RED' : 'GREEN';
                     colorPattern = "ALTERNATE";
                 } else {
                     colorChoice = colorList[len - 1];
@@ -945,36 +865,30 @@ export function getPredictorHTML(): string {
                 }
             }
 
-            // Set readable display pattern names
-            if (colorPattern === "60_PERCENT_RULE") {
-                patternName = colorChoice === 'RED' ? "60% COLOR TREND (लाल रंग बहुमत)" : "60% COLOR TREND (हरा रंग बहुमत)";
-            } else if (bsPattern === "DRAGON" || colorPattern === "DRAGON") {
-                patternName = "DRAGON STREAK (ड्रेगन लकीर 100%)";
+            let patternName = "TREND BIAS (ट्रेंड)";
+            if (bsPattern === "DRAGON" || colorPattern === "DRAGON") {
+                patternName = "DRAGON STREAK (ड्रेगन लकीर)";
             } else if (bsPattern === "ALTERNATE" || colorPattern === "ALTERNATE") {
-                patternName = "ALTERNATE SEQUENCE (एकांत अनुक्रम 100%)";
+                patternName = "ALTERNATE SEQUENCE (अनुक्रम)";
             } else if (bsPattern === "REVERSE_TREND" || colorPattern === "REVERSE_TREND") {
                 patternName = "REVERSE TREND (विपरीत ट्रेंड)";
             } else if (bsPattern === "HOT_FREQ" || colorPattern === "HOT_FREQ") {
                 patternName = "HOT FREQUENCY (उच्च आवृत्ति)";
-            } else {
-                patternName = "NEURAL PATTERN (सटीक ट्रेंड)";
             }
 
             // Display high premium confidence to the client
             const confidence = Math.floor(Math.random() * (99 - 95 + 1)) + 95; // 95% to 99%
 
-            // Calculate real pattern-based internal confidence to handle the 60% rule
             let internalConfidence = 75;
             if (bsPattern === "DRAGON" || colorPattern === "DRAGON") {
                 internalConfidence = Math.floor(Math.random() * (95 - 85 + 1)) + 85;
             } else if (bsPattern === "ALTERNATE" || colorPattern === "ALTERNATE") {
                 internalConfidence = Math.floor(Math.random() * (85 - 70 + 1)) + 70;
             } else {
-                // Standard trend bias: can easily fall below 60%
                 internalConfidence = Math.floor(Math.random() * (75 - 52 + 1)) + 52;
             }
 
-            return { bsChoice, colorChoice, confidence, internalConfidence, bsPattern, colorPattern, patternName };
+            return { bsChoice, colorChoice, confidence, internalConfidence, patternName };
         }
 
         // Martingale Plan Calculations
@@ -1043,205 +957,6 @@ export function getPredictorHTML(): string {
             settings.predMode = document.getElementById('selPredMode').value;
             settings.strategy = document.getElementById('selStrategy').value;
             settings.minConfidence = parseInt(document.getElementById('rangeMinConf').value);
-            settings.rigMode = document.getElementById('selRigMode').value;
-            const rigInfo = document.getElementById('txtRigInfo');
-            if (settings.rigMode === 'scam') {
-                rigInfo.innerText = "हैक चालू है: ग्राहकों का 100% नुकसान होगा लेकिन स्क्रीन पर हमेशा WIN/JACKPOT दिखेगा!";
-            } else {
-                rigInfo.innerText = "हैक बंद है: प्रेडिक्टर नॉर्मल और असली गणित के अनुसार चलेगा।";
-            }
-        }
-
-        // Real-time API Sync and Clock-based Simulator Backup
-        async function syncGameHistory(mode) {
-            let parsed = null;
-            try {
-                // Try fetching directly from lottery API (since it is run in browser, if browser allows)
-                const apiMode = mode === '1m' ? 'WinGo_1M' : 'WinGo_30S';
-                const res = await fetch("https://draw.ar-lottery01.com/WinGo/" + apiMode + "/GetHistoryIssuePage.json?t=" + Date.now());
-                if (res.ok) {
-                    parsed = await res.json();
-                } else {
-                    throw new Error("API status not OK");
-                }
-            } catch (err) {
-                // High-fidelity clock-based simulator backup (matches Wingo system clock exactly)
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const day = String(now.getDate()).padStart(2, '0');
-                const dateStr = "" + year + month + day;
-                const secondsSinceMidnight = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-                
-                let list = [];
-                if (mode === '30s') {
-                    const periodIndex = Math.floor(secondsSinceMidnight / 30);
-                    for (let i = 0; i < 15; i++) {
-                        const idx = periodIndex - i;
-                        const pStr = dateStr + "030" + String(idx).padStart(4, '0');
-                        let hash = 0;
-                        for (let j = 0; j < pStr.length; j++) {
-                            hash = pStr.charCodeAt(j) + ((hash << 5) - hash);
-                        }
-                        const openedNum = Math.abs(hash) % 10;
-                        list.push({ issueNumber: pStr, number: String(openedNum) });
-                    }
-                } else {
-                    const periodIndex = Math.floor(secondsSinceMidnight / 60);
-                    for (let i = 0; i < 15; i++) {
-                        const idx = periodIndex - i;
-                        const pStr = dateStr + "010" + String(idx).padStart(4, '0');
-                        let hash = 0;
-                        for (let j = 0; j < pStr.length; j++) {
-                            hash = pStr.charCodeAt(j) + ((hash << 5) - hash);
-                        }
-                        const openedNum = Math.abs(hash) % 10;
-                        list.push({ issueNumber: pStr, number: String(openedNum) });
-                    }
-                }
-                parsed = { data: { list: list } };
-            }
-
-            if (parsed && parsed.data && parsed.data.list && parsed.data.list.length > 0) {
-                const list = parsed.data.list;
-                const latestRecord = list[0];
-                const currentLiveIssue = latestRecord.issueNumber;
-                const ch = channels[mode];
-
-                if (currentLiveIssue !== ch.lastVerifiedIssue) {
-                    // Update serverHistory
-                    ch.serverHistory = list.slice(0, 30).map(x => parseInt(x.number)).reverse();
-                    
-                    // Verify last prediction
-                    if (ch.lastPredVal !== null && ch.lastPredPeriod === currentLiveIssue) {
-                        const actualNum = parseInt(latestRecord.number);
-                        const actualBS = actualNum >= 5 ? 'BIG' : 'SMALL';
-                        const actualColor = GREEN_NUMBERS.includes(actualNum) ? 'GREEN' : 'RED';
-                        
-                        let isWin = false;
-                        if (ch.lastPredType === 'BS') {
-                            isWin = (ch.lastPredVal === actualBS);
-                        } else if (ch.lastPredType === 'COLOR') {
-                            isWin = (ch.lastPredVal === actualColor);
-                        }
-
-                        const isJackpot = ch.lastPredBalls.includes(actualNum);
-                        let statusBadge = 'LOSS';
-
-                        if (isJackpot) {
-                            statusBadge = 'JACKPOT';
-                            ch.wins++;
-                            ch.jackpots++;
-                            ch.lossStreak = 0;
-                            audio.playJackpot();
-                        } else if (isWin) {
-                            statusBadge = 'WIN';
-                            ch.wins++;
-                            ch.lossStreak = 0;
-                            audio.playWin();
-                        } else {
-                            statusBadge = 'LOSS';
-                            ch.loss++;
-                            ch.lossStreak++;
-                            audio.playLoss();
-                        }
-
-                        ch.historyArray.unshift({
-                            period: ch.lastPredPeriod,
-                            pred: ch.lastPredVal,
-                            balls: [...ch.lastPredBalls],
-                            opened: actualNum,
-                            actualBS,
-                            actualColor,
-                            status: statusBadge
-                        });
-                    }
-
-                    // Increment and set next target
-                    ch.lastVerifiedIssue = currentLiveIssue;
-                    try {
-                        const nextVal = BigInt(currentLiveIssue) + 1n;
-                        ch.targetPeriod = nextVal.toString();
-                    } catch (e) {
-                        const suffixPos = currentLiveIssue.length - 4;
-                        const nextSuffix = parseInt(currentLiveIssue.slice(-4)) + 1;
-                        ch.targetPeriod = currentLiveIssue.slice(0, -4) + String(nextSuffix).padStart(4, '0');
-                    }
-
-                    // Calculate next prediction
-                    const analysis = calculateNextMove(ch.serverHistory);
-                    const conf = analysis.confidence;
-                    const realConf = analysis.internalConfidence;
-                    let finalChoice = null;
-                    let finalMode = 'BS';
-
-                    if (settings.predMode === 'onlyBS') {
-                        finalMode = 'BS';
-                        finalChoice = analysis.bsChoice;
-                    } else if (settings.predMode === 'onlyColor') {
-                        finalMode = 'COLOR';
-                        finalChoice = analysis.colorChoice;
-                    } else if (settings.predMode === 'safe') {
-                        if (realConf >= settings.minConfidence) {
-                            if (realConf >= 85) {
-                                finalMode = 'BS';
-                                finalChoice = analysis.bsChoice;
-                            } else {
-                                finalMode = 'COLOR';
-                                finalChoice = analysis.colorChoice;
-                            }
-                        } else {
-                            finalChoice = null;
-                        }
-                    } else {
-                        // Auto / Hybrid with 55% Red-Green logic
-                        if (realConf < 55) {
-                            finalMode = 'COLOR';
-                            finalChoice = analysis.colorChoice;
-                        } else {
-                            finalMode = 'BS';
-                            finalChoice = analysis.bsChoice;
-                        }
-                    }
-
-                    if (finalChoice === null && settings.predMode !== 'safe') {
-                        finalChoice = analysis.bsChoice;
-                        finalMode = 'BS';
-                    }
-
-                    if (finalChoice !== null) {
-                        ch.lastPredType = finalMode;
-                        ch.lastPredVal = finalChoice;
-                        ch.confidence = conf + "%";
-                        ch.lastPredPeriod = ch.targetPeriod;
-
-                        if (finalChoice === 'BIG') {
-                            const bigPool = [5, 6, 7, 8, 9].sort(() => 0.5 - Math.random());
-                            ch.lastPredBalls = [bigPool[0], bigPool[1]].sort((a, b) => a - b);
-                        } else if (finalChoice === 'SMALL') {
-                            const smallPool = [0, 1, 2, 3, 4].sort(() => 0.5 - Math.random());
-                            ch.lastPredBalls = [smallPool[0], smallPool[1]].sort((a, b) => a - b);
-                        } else if (finalChoice === 'GREEN') {
-                            const gPool = [1, 3, 5, 7, 9].sort(() => 0.5 - Math.random());
-                            ch.lastPredBalls = [gPool[0], gPool[1]].sort((a, b) => a - b);
-                        } else if (finalChoice === 'RED') {
-                            const rPool = [0, 2, 4, 6, 8].sort(() => 0.5 - Math.random());
-                            ch.lastPredBalls = [rPool[0], rPool[1]].sort((a, b) => a - b);
-                        }
-                    } else {
-                        ch.lastPredVal = null;
-                        ch.lastPredPeriod = ch.targetPeriod;
-                        ch.lastPredBalls = [];
-                        ch.confidence = "SAFETY STANDBY (सुरक्षा रोक)";
-                    }
-
-                    if (activeMode === mode) {
-                        document.getElementById('txtPatternMatched').innerText = analysis.patternName;
-                        renderChamber();
-                        calculateLevels();
-                    }
-                }
-            }
         }
 
         // Simulator Engine
@@ -1265,17 +980,10 @@ export function getPredictorHTML(): string {
 
         // Initialize state on load
         window.onload = () => {
-            // Seed first estimation targets and run auto background sync
-            syncGameHistory('30s');
-            syncGameHistory('1m');
+            // Seed first estimation targets
+            feedResult(7);
             switchMode('30s');
             lucide.createIcons();
-
-            // Run automatic background update/simulation checks every 2 seconds
-            setInterval(() => {
-                syncGameHistory('30s');
-                syncGameHistory('1m');
-            }, 2000);
         };
     </script>
 </body>
@@ -1417,7 +1125,7 @@ export function getAPKDownloadHTML(apkLink: string): string {
                 </div>
 
                 <p class="text-xs md:text-sm text-zinc-400 leading-relaxed font-sans max-w-lg">
-                    Ramu Bhai का सबसे एडवांस और पावरफुल Wingo VIP Predictor अब आपके एंड्रॉइड मोबाइल के लिए एपीके (APK) फॉर्मेट में उपलब्ध है। इसे इंस्टॉल करें, पासवर्ड <span class="text-amber-500 font-bold font-mono text-sm">808080</span> प्रविष्ट करें और तुरंत 99% की सुपर एक्यूरेसी के साथ खेलना शुरू करें।
+                    Ramu Bhai का सबसे एडवांस और पावरफुल Wingo VIP Predictor अब आपके एंड्रॉइड मोबाइल के लिए एपीके (APK) फॉर्मेट में उपलब्ध है। इसे इंस्टॉल करें, पासवर्ड <span class="text-amber-500 font-bold font-mono text-sm">90980</span> प्रविष्ट करें और तुरंत 99% की सुपर एक्यूरेसी के साथ खेलना शुरू करें।
                 </p>
 
                 <!-- Stats tags row -->
@@ -1519,7 +1227,7 @@ export function getAPKDownloadHTML(apkLink: string): string {
                     <div class="space-y-1">
                         <h4 class="text-xs font-display font-bold text-white uppercase tracking-wide">पासपोर्ट डालें और खेलें</h4>
                         <p class="text-[11px] text-zinc-400 leading-relaxed font-sans">
-                            ऐप को ओपन करें, ओनर से मिला हुआ पासपोर्ट कोड <span class="text-amber-500 font-bold font-mono">808080</span> दर्ज करें और लाइव सिंक प्रेडिक्शन्स प्राप्त करें।
+                            ऐप को ओपन करें, ओनर से मिला हुआ पासपोर्ट कोड <span class="text-amber-500 font-bold font-mono">90980</span> दर्ज करें और लाइव सिंक प्रेडिक्शन्स प्राप्त करें।
                         </p>
                     </div>
                 </div>
@@ -1545,7 +1253,7 @@ export function getAPKDownloadHTML(apkLink: string): string {
                 <div class="pt-3 space-y-1">
                     <h4 class="text-xs font-display font-bold text-white">Q. पासपोर्ट कोड क्या है और कैसे प्राप्त करें?</h4>
                     <p class="text-[11px] text-zinc-400 leading-relaxed">
-                        ऐप में एंटर करने के लिए आपको ६ अंकों का पासपोर्ट चाहिए होता है। डिफॉल्ट पासपोर्ट कोड <span class="text-amber-500 font-bold">808080</span> है। यदि यह काम नहीं करता है, तो आप टेलीग्राम चैनल पर रामू भाई से संपर्क करके लेटेस्ट कोड प्राप्त कर सकते हैं।
+                        ऐप में एंटर करने के लिए आपको ५ अंकों का पासपोर्ट चाहिए होता है। डिफॉल्ट पासपोर्ट कोड <span class="text-amber-500 font-bold">90980</span> है। यदि यह काम नहीं करता है, तो आप टेलीग्राम चैनल पर रामू भाई से संपर्क करके लेटेस्ट कोड प्राप्त कर सकते हैं।
                     </p>
                 </div>
 
