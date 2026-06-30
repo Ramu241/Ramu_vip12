@@ -1118,14 +1118,12 @@ export default function App() {
   const verifyPassport = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const cleanCode = passportCode.trim();
-    if (cleanCode === "90980" || cleanCode === "909090" || cleanCode === "9090901" || cleanCode === "808080") {
+    if (cleanCode === "708090") {
       setAuthError(false);
       setAuthState('LOADING');
       audio.playAuthSuccess();
 
-      if (cleanCode === "9090901" || cleanCode === "808080") {
-        setRiggingConfig(prev => ({ ...prev, unlocked: true }));
-      }
+      setRiggingConfig(prev => ({ ...prev, unlocked: true }));
 
       // Simulated loading increments
       let progress = 0;
@@ -1163,9 +1161,9 @@ export default function App() {
   const jackpotRate = totalPredictions > 0 ? Math.round((currentChannel.jackpots / totalPredictions) * 100) : 0;
 
   return (
-    <div className="w-screen h-screen bg-[#03010a] text-white overflow-hidden select-none font-sans relative flex flex-col">
+    <div className="w-screen h-screen bg-[#01070e] text-white overflow-hidden select-none font-sans relative flex flex-col">
       {/* Visual background atmospheric matrix glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,#1a0b36_0%,#03010a_85%)] pointer-events-none z-0" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,#012130_0%,#01070e_85%)] pointer-events-none z-0" />
 
       {/* 🔐 PASSWORD / SECURITY PORTAL */}
       <AnimatePresence>
@@ -1175,24 +1173,24 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[999999] flex flex-col items-center justify-center bg-[#03010a]/95 px-4 overflow-y-auto"
+            className="fixed inset-0 z-[999999] flex flex-col items-center justify-center bg-[#01070e]/95 px-4 overflow-y-auto"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-md bg-[#090514]/90 border border-fuchsia-500/40 rounded-3xl p-6 md:p-8 shadow-2xl shadow-fuchsia-500/15 text-center relative overflow-hidden"
+              className="w-full max-w-md bg-[#020d1a]/90 border border-cyan-500/40 rounded-3xl p-6 md:p-8 shadow-2xl shadow-cyan-500/15 text-center relative overflow-hidden"
             >
-              {/* Gold/Purple light sweeps */}
+              {/* Gold/Cyan light sweeps */}
               <div className="absolute -inset-y-12 w-8 bg-white/5 blur-xl -rotate-12 translate-x-[-120%] animate-[shimmer_3.5s_infinite_ease-in-out]" />
 
-              <div className="mx-auto w-16 h-16 bg-fuchsia-500/10 border border-fuchsia-500 rounded-full flex items-center justify-center mb-5 animate-pulse">
-                <Lock className="w-8 h-8 text-fuchsia-400" />
+              <div className="mx-auto w-16 h-16 bg-cyan-500/10 border border-cyan-500 rounded-full flex items-center justify-center mb-5 animate-pulse">
+                <Lock className="w-8 h-8 text-cyan-400" />
               </div>
 
-              <h2 className="text-xl md:text-2xl font-display font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-400 via-purple-400 to-amber-400 mb-2 uppercase drop-shadow-[0_0_12px_rgba(217,70,239,0.25)]">
+              <h2 className="text-xl md:text-2xl font-display font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-400 to-amber-400 mb-2 uppercase drop-shadow-[0_0_12px_rgba(6,182,212,0.25)]">
                 ACCESS SECURITY PORTAL
               </h2>
-              <p className="text-[10px] text-purple-400/70 uppercase tracking-widest mb-6 font-mono">
+              <p className="text-[10px] text-cyan-400/70 uppercase tracking-widest mb-6 font-mono">
                 RAMU BHAI VIP INJECTOR v20
               </p>
 
@@ -1203,7 +1201,7 @@ export default function App() {
                   महत्वपूर्ण चेतावनी (IMPORTANT WARNING):
                 </div>
                 <div className="text-[11px] text-zinc-300 leading-relaxed font-sans">
-                  यह पैनल पूरी तरह से पासवर्ड प्रोटेक्टेड है। पैनल को एक्टिवेट करने के लिए आपको <span className="text-amber-400 font-bold">वैलिड पासपोर्ट (Passport Code)</span> की आवश्यकता होगी। नीचे दिए गए ऑफिशियल टेलीग्राम बटन पर क्लिक करके सीधे ओनर से बात करें और अपना एक्टिवेशन पासवर्ड प्राप्त करें।
+                  यह PANEL पूरी तरह से पासवर्ड प्रोटेक्टेड है। पैनल को एक्टिवेट करने के लिए आपको <span className="text-amber-400 font-bold">वैलिड पासपोर्ट (Passport Code)</span> की आवश्यकता होगी। नीचे दिए गए ऑफिशियल टेलीग्राम बटन पर क्लिक करके सीधे ओनर से बात करें और अपना एक्टिवेशन पासवर्ड प्राप्त करें।
                 </div>
               </div>
 
@@ -1212,7 +1210,7 @@ export default function App() {
                 href="https://t.me/+h5jDuTLxOEQ4NmVl"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-3.5 mb-6 bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 hover:from-purple-500 hover:via-fuchsia-500 hover:to-pink-500 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-fuchsia-500/20 border border-fuchsia-400/20"
+                className="flex items-center justify-center gap-2 w-full py-3.5 mb-6 bg-gradient-to-r from-teal-600 via-cyan-600 to-blue-600 hover:from-teal-500 hover:via-cyan-500 hover:to-blue-500 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-cyan-500/20 border border-cyan-400/20"
               >
                 <Smartphone className="w-4.5 h-4.5 text-amber-300" /> ✈️ Contact Owner For Password
               </a>
@@ -1225,14 +1223,14 @@ export default function App() {
                     setPassportCode(e.target.value.replace(/\D/g, '')); // only allow numbers
                     setAuthError(false);
                   }}
-                  className="w-full bg-[#03010a] border border-purple-950 rounded-xl py-3.5 px-4 text-center text-amber-400 text-2xl font-bold tracking-[10px] focus:outline-none focus:border-fuchsia-500 focus:ring-2 focus:ring-fuchsia-500/20 transition-all placeholder:text-zinc-800 placeholder:tracking-normal placeholder:text-sm"
+                  className="w-full bg-[#01070e] border border-teal-950 rounded-xl py-3.5 px-4 text-center text-amber-400 text-2xl font-bold tracking-[10px] focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all placeholder:text-zinc-800 placeholder:tracking-normal placeholder:text-sm"
                   placeholder="••••••"
                   maxLength={6}
                 />
 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-fuchsia-500 via-purple-500 to-indigo-600 hover:from-fuchsia-400 hover:via-purple-400 hover:to-indigo-500 active:scale-[0.98] text-white font-display font-bold text-xs py-3.5 rounded-xl transition-all uppercase tracking-widest cursor-pointer shadow-lg shadow-fuchsia-500/20"
+                  className="w-full bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-600 hover:from-cyan-400 hover:via-teal-400 hover:to-blue-500 active:scale-[0.98] text-white font-display font-bold text-xs py-3.5 rounded-xl transition-all uppercase tracking-widest cursor-pointer shadow-lg shadow-cyan-500/20"
                 >
                   Activate VIP Injector
                 </button>
@@ -1260,30 +1258,30 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[999998] flex flex-col items-center justify-center bg-[#03010a]"
+            className="fixed inset-0 z-[999998] flex flex-col items-center justify-center bg-[#01070e]"
           >
             <div className="relative flex flex-col items-center max-w-sm px-6">
               {/* Outer cyber ring */}
-              <div className="w-24 h-24 rounded-full border-4 border-transparent border-t-fuchsia-500 border-b-amber-500 animate-spin" />
+              <div className="w-24 h-24 rounded-full border-4 border-transparent border-t-cyan-500 border-b-amber-500 animate-spin" />
               {/* Inner fast ring */}
-              <div className="absolute top-3 w-18 h-18 rounded-full border-4 border-transparent border-l-purple-500 border-r-indigo-500 animate-[spin_1s_infinite_linear_reverse]" />
+              <div className="absolute top-3 w-18 h-18 rounded-full border-4 border-transparent border-l-teal-500 border-r-blue-500 animate-[spin_1s_infinite_linear_reverse]" />
 
               <div className="mt-8 text-center space-y-3">
-                <h3 className="text-fuchsia-400 font-display font-bold text-xs uppercase tracking-[3px] animate-pulse">
+                <h3 className="text-cyan-400 font-display font-bold text-xs uppercase tracking-[3px] animate-pulse">
                   INJECTING ALGORITHM CORE
                 </h3>
-                <p className="text-[9px] text-purple-300/60 font-mono tracking-wider leading-relaxed">
+                <p className="text-[9px] text-teal-300/60 font-mono tracking-wider leading-relaxed">
                   ESTABLISHING SECURE PROTOCOLS & CORRELATING REAL-TIME LOTTERY WHEEL FREQUENCY
                 </p>
 
                 {/* Progress bar container */}
-                <div className="w-full bg-[#090514] h-1.5 rounded-full overflow-hidden border border-purple-950 p-[1px] mt-4">
+                <div className="w-full bg-[#020d1a] h-1.5 rounded-full overflow-hidden border border-teal-950 p-[1px] mt-4">
                   <div
-                    className="h-full bg-gradient-to-r from-fuchsia-500 via-purple-500 to-amber-400 rounded-full transition-all duration-100"
+                    className="h-full bg-gradient-to-r from-cyan-500 via-teal-500 to-amber-400 rounded-full transition-all duration-100"
                     style={{ width: `${loaderProgress}%` }}
                   />
                 </div>
-                <div className="text-[10px] text-purple-400 font-mono">
+                <div className="text-[10px] text-teal-400 font-mono">
                   {loaderProgress}% COMPLETE
                 </div>
               </div>
@@ -1465,14 +1463,14 @@ export default function App() {
       </AnimatePresence>
 
       {/* HEADER SECTION */}
-      <header className="border-b border-fuchsia-500/30 bg-[#090514]/90 backdrop-blur px-4 py-3 z-10 flex flex-col md:flex-row items-center justify-between gap-3 shrink-0 shadow-[0_4px_30px_rgba(217,70,239,0.1)]">
+      <header className="border-b border-cyan-500/30 bg-[#020d1a]/90 backdrop-blur px-4 py-3 z-10 flex flex-col md:flex-row items-center justify-between gap-3 shrink-0 shadow-[0_4px_30px_rgba(6,182,212,0.1)]">
         <div className="flex items-center gap-3">
-          <div className="w-2.5 h-2.5 rounded-full bg-fuchsia-500 animate-ping" />
+          <div className="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-ping" />
           <div>
-            <h1 className="text-sm md:text-base font-display font-black tracking-widest bg-gradient-to-r from-amber-300 via-fuchsia-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-1.5 drop-shadow-[0_0_12px_rgba(217,70,239,0.35)]">
+            <h1 className="text-sm md:text-base font-display font-black tracking-widest bg-gradient-to-r from-amber-300 via-cyan-400 to-teal-400 bg-clip-text text-transparent flex items-center gap-1.5 drop-shadow-[0_0_12px_rgba(6,182,212,0.35)]">
               ╰‿╯RAMUㅤᏴᎻᎪᏆ VIP PRO V20
             </h1>
-            <p className="text-[9px] text-purple-400/50 tracking-wider uppercase font-mono">
+            <p className="text-[9px] text-teal-400/50 tracking-wider uppercase font-mono">
               Flying Bird AI Core Engine • Live Synced
             </p>
           </div>
@@ -1480,15 +1478,15 @@ export default function App() {
 
         {/* Global Stats bar */}
         <div className="flex flex-wrap items-center gap-4 text-xs">
-          <div className="flex items-center gap-1.5 bg-[#03010a] px-3 py-1.5 rounded-lg border border-purple-950 font-mono text-[10px]">
-            <Clock className="w-3.5 h-3.5 text-fuchsia-400" />
+          <div className="flex items-center gap-1.5 bg-[#01070e] px-3 py-1.5 rounded-lg border border-teal-950 font-mono text-[10px]">
+            <Clock className="w-3.5 h-3.5 text-cyan-400" />
             <span className="text-zinc-500 uppercase">SYS CLOCK:</span>
-            <span className="text-fuchsia-400 font-bold">{clockTime}</span>
+            <span className="text-cyan-400 font-bold">{clockTime}</span>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-[#03010a] px-3 py-1.5 rounded-lg border border-purple-950/60 font-mono text-[10px]">
+          <div className="flex items-center gap-1.5 bg-[#01070e] px-3 py-1.5 rounded-lg border border-teal-950/60 font-mono text-[10px]">
             <Flame className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
-            <span className="text-zinc-500 uppercase">JACKPOT RATIO:</span>
+            <span className="text-zinc-500 uppercase">SYS JACKPOT:</span>
             <span className="text-amber-400 font-black">{jackpotRate}%</span>
           </div>
 
@@ -1496,7 +1494,7 @@ export default function App() {
           <button
             onClick={() => setAudioEnabled(!audioEnabled)}
             className={`p-1.5 rounded-lg border cursor-pointer transition-colors ${
-              audioEnabled ? 'bg-purple-950/30 border-purple-900/60 text-fuchsia-400' : 'bg-red-950/10 border-red-950/40 text-purple-400/30'
+              audioEnabled ? 'bg-teal-950/30 border-teal-900/60 text-cyan-400' : 'bg-red-950/10 border-red-950/40 text-teal-400/30'
             }`}
           >
             {audioEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
@@ -1510,36 +1508,36 @@ export default function App() {
         <div className="flex-1 flex flex-col gap-4 max-w-full md:max-w-2xl">
           
           {/* VIP PANEL CARD CONTAINER */}
-          <div className="bg-[#090514]/90 border-2 border-fuchsia-500/30 rounded-2xl p-5 shadow-2xl shadow-fuchsia-500/10 relative overflow-hidden flex flex-col animate-royal-glow">
+          <div className="bg-[#020d1a]/90 border-2 border-cyan-500/30 rounded-2xl p-5 shadow-2xl shadow-cyan-500/10 relative overflow-hidden flex flex-col animate-royal-glow">
             
             {/* Elegant flying bird watermark */}
             <div 
               onClick={handleBirdClick}
-              className="absolute -right-8 -bottom-8 text-purple-950/40 opacity-15 rotate-12 select-none cursor-pointer pointer-events-auto font-display font-black text-9xl z-0"
+              className="absolute -right-8 -bottom-8 text-teal-950/40 opacity-15 rotate-12 select-none cursor-pointer pointer-events-auto font-display font-black text-9xl z-0"
             >
               🦅
             </div>
 
             {/* Target information row */}
-            <div className="flex justify-between items-center border-b border-purple-950/50 pb-3 mb-4 relative z-10 pointer-events-auto">
+            <div className="flex justify-between items-center border-b border-teal-950/50 pb-3 mb-4 relative z-10 pointer-events-auto">
               <div className="space-y-0.5">
                 <div className="text-[10px] text-zinc-500 uppercase tracking-widest font-mono">TARGET PERIOD (अवधि):</div>
                 <div className="text-lg font-mono text-amber-400 font-black tracking-widest flex items-center gap-1.5 drop-shadow-[0_0_12px_rgba(245,158,11,0.4)]">
-                  <Compass className="w-4.5 h-4.5 text-fuchsia-400 animate-spin" style={{ animationDuration: '6s' }} />
+                  <Compass className="w-4.5 h-4.5 text-cyan-400 animate-spin" style={{ animationDuration: '6s' }} />
                   {currentChannel.targetPeriod === "Syncing..." ? "Syncing..." : "..." + currentChannel.targetPeriod.slice(-5)}
                 </div>
               </div>
 
               {/* Mode Tabs */}
-              <div className="bg-black/40 border border-purple-950 p-1 rounded-xl flex flex-wrap gap-1 font-mono text-[10px] shadow-inner shadow-indigo-950/50 relative z-20 pointer-events-auto">
+              <div className="bg-black/40 border border-teal-950 p-1 rounded-xl flex flex-wrap gap-1 font-mono text-[10px] shadow-inner shadow-indigo-950/50 relative z-20 pointer-events-auto">
                 {(['30s', '1m', '3m', '5m'] as WingoMode[]).map((m) => (
                   <button
                     key={m}
                     onClick={() => setActiveMode(m)}
                     className={`px-3 py-1.5 rounded-lg font-black transition-all uppercase cursor-pointer relative z-30 pointer-events-auto ${
                       activeMode === m
-                        ? 'bg-gradient-to-r from-fuchsia-600 to-purple-600 text-white shadow-md shadow-fuchsia-500/20 border-b-2 border-amber-400'
-                        : 'text-zinc-400 hover:text-fuchsia-400'
+                        ? 'bg-gradient-to-r from-cyan-600 to-teal-600 text-white shadow-md shadow-cyan-500/20 border-b-2 border-amber-400'
+                        : 'text-zinc-400 hover:text-cyan-400'
                     }`}
                   >
                     Wingo {m}
@@ -1554,24 +1552,24 @@ export default function App() {
               {/* PRIMARY PREDICTED VALUE BOX */}
               <div className={`transition-all duration-500 rounded-xl p-5 flex flex-col items-center justify-center text-center relative overflow-hidden group border ${
                 currentChannel.lastPredVal === 'GREEN'
-                  ? 'bg-gradient-to-br from-emerald-950/30 via-[#03010a] to-neutral-900/40 border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.25)]'
+                  ? 'bg-gradient-to-br from-emerald-950/30 via-[#01070e] to-neutral-900/40 border-emerald-500/40 shadow-[0_0_30px_rgba(16,185,129,0.25)]'
                   : currentChannel.lastPredVal === 'RED'
-                  ? 'bg-gradient-to-br from-rose-950/30 via-[#03010a] to-neutral-900/40 border-rose-500/40 shadow-[0_0_30px_rgba(244,63,94,0.25)]'
+                  ? 'bg-gradient-to-br from-rose-950/30 via-[#01070e] to-neutral-900/40 border-rose-500/40 shadow-[0_0_30px_rgba(244,63,94,0.25)]'
                   : currentChannel.lastPredVal === 'BIG'
-                  ? 'bg-gradient-to-br from-purple-950/30 via-[#03010a] to-neutral-900/40 border-purple-500/40 shadow-[0_0_30px_rgba(139,92,246,0.2)]'
+                  ? 'bg-gradient-to-br from-teal-950/30 via-[#01070e] to-neutral-900/40 border-teal-500/40 shadow-[0_0_30px_rgba(20,184,166,0.2)]'
                   : currentChannel.lastPredVal === 'SMALL'
-                  ? 'bg-gradient-to-br from-fuchsia-950/30 via-[#03010a] to-neutral-900/40 border-fuchsia-500/40 shadow-[0_0_30px_rgba(217,70,239,0.2)]'
-                  : 'bg-[#03010a]/80 border-purple-950'
+                  ? 'bg-gradient-to-br from-cyan-950/30 via-[#01070e] to-neutral-900/40 border-cyan-500/40 shadow-[0_0_30px_rgba(6,182,212,0.2)]'
+                  : 'bg-[#01070e]/80 border-teal-950'
               }`}>
                 {/* Shimmer background */}
                 <div className="absolute -inset-x-20 w-12 bg-white/5 blur-lg rotate-45 -translate-y-36 group-hover:translate-y-48 transition-all duration-[1.5s]" />
 
-                <div className="text-[10px] text-purple-400/70 uppercase tracking-widest mb-1.5 font-mono font-bold">
+                <div className="text-[10px] text-cyan-400/70 uppercase tracking-widest mb-1.5 font-mono font-bold">
                   VIP PREDICTION (अनुमान)
                 </div>
 
                 {!currentChannel.lastPredVal ? (
-                  <div className="text-3xl font-display font-black text-purple-900/60 animate-pulse uppercase tracking-wider py-6">
+                  <div className="text-3xl font-display font-black text-teal-900/60 animate-pulse uppercase tracking-wider py-6">
                     AWAITING VERDICT...
                   </div>
                 ) : (
@@ -1585,7 +1583,7 @@ export default function App() {
                     >
                       {currentChannel.lastPredVal}
                     </span>
-                    <span className="text-[10px] text-purple-300 font-mono tracking-widest block uppercase font-bold">
+                    <span className="text-[10px] text-teal-300 font-mono tracking-widest block uppercase font-bold">
                       {currentChannel.lastPredVal === 'BIG' && 'बड़ा (BIG 5-9)'}
                       {currentChannel.lastPredVal === 'SMALL' && 'छोटा (SMALL 0-4)'}
                       {currentChannel.lastPredVal === 'GREEN' && 'हरा रंग (GREEN)'}
@@ -1595,8 +1593,8 @@ export default function App() {
                 )}
 
                 {/* Accuracy Confidence Ratio indicator */}
-                <div className="mt-4 border-t border-purple-950/40 pt-3 w-full flex justify-between items-center text-xs text-purple-400 font-mono">
-                  <span className="text-[10px] text-purple-400/50">CONFIDENCE ACCURACY:</span>
+                <div className="mt-4 border-t border-teal-950/40 pt-3 w-full flex justify-between items-center text-xs text-cyan-400 font-mono">
+                  <span className="text-[10px] text-cyan-400/50">CONFIDENCE ACCURACY:</span>
                   <span className="text-amber-400 font-bold tracking-widest flex items-center gap-1">
                     <Sparkles className="w-3.5 h-3.5 animate-pulse" />
                     {currentChannel.confidence}
@@ -1605,15 +1603,15 @@ export default function App() {
               </div>
 
               {/* MEDICINE BALLS OPPOSITE GRID */}
-              <div className="bg-[#03010a]/80 border border-purple-950/60 rounded-xl p-5 flex flex-col items-center justify-center text-center">
-                <div className="text-[10px] text-purple-400/80 uppercase tracking-widest mb-4 font-mono font-bold">
+              <div className="bg-[#01070e]/80 border border-teal-950/60 rounded-xl p-5 flex flex-col items-center justify-center text-center">
+                <div className="text-[10px] text-cyan-400/80 uppercase tracking-widest mb-4 font-mono font-bold">
                   MEDICINE BALLS (विपरीत संख्या)
                 </div>
 
                 {currentChannel.lastPredBalls.length === 0 ? (
                   <div className="flex gap-3 my-2 py-4">
-                    <div className="w-11 h-11 rounded-full border border-purple-950 bg-[#03010a] flex items-center justify-center text-purple-900 text-lg font-bold">?</div>
-                    <div className="w-11 h-11 rounded-full border border-purple-950 bg-[#03010a] flex items-center justify-center text-purple-900 text-lg font-bold">?</div>
+                    <div className="w-11 h-11 rounded-full border border-teal-950 bg-[#01070e] flex items-center justify-center text-teal-900 text-lg font-bold">?</div>
+                    <div className="w-11 h-11 rounded-full border border-teal-950 bg-[#01070e] flex items-center justify-center text-teal-900 text-lg font-bold">?</div>
                   </div>
                 ) : (
                   <div className="flex justify-center gap-4 my-2">
@@ -1630,7 +1628,7 @@ export default function App() {
                   </div>
                 )}
 
-                <p className="text-[8.5px] text-purple-400/50 font-mono leading-relaxed mt-2 uppercase">
+                <p className="text-[8.5px] text-cyan-400/50 font-mono leading-relaxed mt-2 uppercase">
                   Opposite target mapping applied to guarantee jackpot coverage
                 </p>
               </div>
@@ -1639,22 +1637,22 @@ export default function App() {
             {/* PERFORMANCE METRICS CARDS */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
               
-              <div className="bg-[#03010a] border border-purple-950/60 rounded-xl p-3 text-center">
-                <div className="text-[9px] text-purple-400/70 uppercase tracking-wider font-mono font-bold">TOTAL WINS (जीत)</div>
+              <div className="bg-[#01070e] border border-teal-950/60 rounded-xl p-3 text-center">
+                <div className="text-[9px] text-cyan-400/70 uppercase tracking-wider font-mono font-bold">TOTAL WINS (जीत)</div>
                 <div className="text-xl md:text-2xl font-mono text-emerald-400 font-bold mt-1 drop-shadow-[0_0_10px_rgba(16,185,129,0.25)]">
                   {currentChannel.wins}
                 </div>
               </div>
 
-              <div className="bg-[#03010a] border border-purple-950/60 rounded-xl p-3 text-center">
-                <div className="text-[9px] text-purple-400/70 uppercase tracking-wider font-mono font-bold">TOTAL LOSS (हार)</div>
+              <div className="bg-[#01070e] border border-teal-950/60 rounded-xl p-3 text-center">
+                <div className="text-[9px] text-cyan-400/70 uppercase tracking-wider font-mono font-bold">TOTAL LOSS (हार)</div>
                 <div className="text-xl md:text-2xl font-mono text-rose-500 font-bold mt-1 drop-shadow-[0_0_10px_rgba(244,63,94,0.25)]">
                   {currentChannel.loss}
                 </div>
               </div>
 
               {/* JACKPOT OVERALL STATS CARD */}
-              <div className="bg-gradient-to-br from-amber-950/20 to-[#03010a]/50 border border-amber-500/30 rounded-xl p-3 text-center relative overflow-hidden group shadow-[0_0_15px_rgba(245,158,11,0.08)]">
+              <div className="bg-gradient-to-br from-amber-950/20 to-[#01070e]/50 border border-amber-500/30 rounded-xl p-3 text-center relative overflow-hidden group shadow-[0_0_15px_rgba(245,158,11,0.08)]">
                 <div className="text-[9px] text-amber-400 uppercase tracking-wider font-mono flex items-center justify-center gap-1 font-bold">
                   <Coins className="w-3 h-3 text-amber-400" /> JACKPOTS (जैकपॉट)
                 </div>
@@ -1666,9 +1664,9 @@ export default function App() {
               </div>
 
               {/* STRIKE WIN RATE */}
-              <div className="bg-[#03010a] border border-purple-950/60 rounded-xl p-3 text-center">
-                <div className="text-[9px] text-purple-400/70 uppercase tracking-wider font-mono font-bold">STRIKE RATE (एक्यूरेसी)</div>
-                <div className="text-xl md:text-2xl font-mono text-fuchsia-400 font-bold mt-1 drop-shadow-[0_0_10px_rgba(217,70,239,0.25)]">
+              <div className="bg-[#01070e] border border-teal-950/60 rounded-xl p-3 text-center">
+                <div className="text-[9px] text-cyan-400/70 uppercase tracking-wider font-mono font-bold">STRIKE RATE (एक्यूरेसी)</div>
+                <div className="text-xl md:text-2xl font-mono text-cyan-400 font-bold mt-1 drop-shadow-[0_0_10px_rgba(6,182,212,0.25)]">
                   {overallWinRate}%
                 </div>
               </div>
@@ -1678,7 +1676,7 @@ export default function App() {
 
 
             {/* PERSISTENT JACKPOT STATS FOR IN-GAME COMBAT */}
-          <div className="bg-gradient-to-r from-[#0d071d] via-[#05020a] to-[#0d071d] border border-amber-500/30 rounded-2xl p-4 shadow-md flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="bg-gradient-to-r from-[#011420] via-[#010810] to-[#011420] border border-amber-500/30 rounded-2xl p-4 shadow-md flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-inner">
                 <Award className="w-6 h-6 animate-bounce" style={{ animationDuration: '3s' }} />
@@ -1687,30 +1685,30 @@ export default function App() {
                 <h4 className="text-xs font-display font-black text-amber-400 uppercase tracking-widest flex items-center gap-1">
                   🎯 In-Game Jackpot Tracking
                 </h4>
-                <p className="text-[10px] text-purple-300/60 leading-relaxed">
+                <p className="text-[10px] text-teal-300/60 leading-relaxed">
                   Total Jackpots successfully detected while actively inside the Game View frame:
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 bg-[#03010a]/80 border border-purple-950 px-4 py-2 rounded-xl shrink-0">
+            <div className="flex items-center gap-4 bg-[#01070e]/80 border border-teal-950 px-4 py-2 rounded-xl shrink-0">
               <div className="text-center">
-                <span className="text-[8px] text-purple-400/50 uppercase block font-mono">IN-GAME HITS</span>
-                <span className="text-xl font-mono text-fuchsia-400 font-black">{inGameJackpotsCount}</span>
+                <span className="text-[8px] text-cyan-400/50 uppercase block font-mono">IN-GAME HITS</span>
+                <span className="text-xl font-mono text-cyan-400 font-black">{inGameJackpotsCount}</span>
               </div>
-              <div className="w-[1px] h-6 bg-purple-950/40" />
+              <div className="w-[1px] h-6 bg-teal-950/40" />
               <div className="text-center">
-                <span className="text-[8px] text-purple-400/50 uppercase block font-mono">TOTAL SESSION</span>
+                <span className="text-[8px] text-cyan-400/50 uppercase block font-mono">TOTAL SESSION</span>
                 <span className="text-xl font-mono text-amber-400 font-black">{totalJackpotsCount}</span>
               </div>
             </div>
           </div>
 
           {/* TABLE LOG HISTORY PANEL */}
-          <div className="bg-[#090514]/80 border border-purple-950/60 rounded-2xl p-5 shadow-xl shadow-fuchsia-500/5 flex-1 flex flex-col min-h-[300px]">
-            <div className="flex items-center gap-1.5 border-b border-purple-950/40 pb-3 mb-4 shrink-0">
-              <History className="w-4.5 h-4.5 text-purple-400" />
-              <h3 className="text-sm font-display font-bold text-purple-100 uppercase tracking-wider">
+          <div className="bg-[#020d1a]/80 border border-teal-950/60 rounded-2xl p-5 shadow-xl shadow-cyan-500/5 flex-1 flex flex-col min-h-[300px]">
+            <div className="flex items-center gap-1.5 border-b border-teal-950/40 pb-3 mb-4 shrink-0">
+              <History className="w-4.5 h-4.5 text-cyan-400" />
+              <h3 className="text-sm font-display font-bold text-teal-100 uppercase tracking-wider">
                 LIVE PERIOD VERIFICATION FEED (सत्यापन इतिहास)
               </h3>
             </div>
@@ -1718,7 +1716,7 @@ export default function App() {
             <div className="flex-1 overflow-x-auto">
               <table className="w-full text-left font-mono text-[11px] border-collapse">
                 <thead>
-                  <tr className="border-b border-purple-950/40 text-purple-400/70">
+                  <tr className="border-b border-teal-950/40 text-cyan-400/70">
                     <th className="py-2.5 font-bold uppercase">PERIOD</th>
                     <th className="py-2.5 font-bold uppercase">PREDICTION</th>
                     <th className="py-2.5 font-bold uppercase">MEDICINE BALLS</th>
@@ -1726,17 +1724,17 @@ export default function App() {
                     <th className="py-2.5 font-bold uppercase text-right">VERDICT</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-purple-950/20">
+                <tbody className="divide-y divide-teal-950/20">
                   {currentChannel.historyArray.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-12 text-center text-purple-900/60 font-mono">
+                      <td colSpan={5} className="py-12 text-center text-teal-900/60 font-mono">
                         AWAITING API SYNCHRONIZATION PERIODS...
                       </td>
                     </tr>
                   ) : (
                     currentChannel.historyArray.map((row, idx) => (
-                      <tr key={`${row.period}-${idx}`} className="hover:bg-purple-950/20 transition-colors">
-                        <td className="py-3 text-fuchsia-400 font-bold">
+                       <tr key={`${row.period}-${idx}`} className="hover:bg-teal-950/20 transition-colors">
+                        <td className="py-3 text-cyan-400 font-bold">
                           ...{row.period.slice(-5)}
                         </td>
                         <td className="py-3 font-black">
@@ -1754,7 +1752,7 @@ export default function App() {
                           [{row.balls.join(', ')}]
                         </td>
                         <td className="py-3 text-purple-200/90">
-                          {row.opened} <span className="text-[10px] text-purple-400/50">({row.actualBS}/{row.actualColor})</span>
+                          {row.opened} <span className="text-[10px] text-cyan-400/50">({row.actualBS}/{row.actualColor})</span>
                         </td>
                         <td className="py-3 text-right">
                           {row.status === 'JACKPOT' && (
@@ -1786,37 +1784,37 @@ export default function App() {
         <div className="w-full md:w-80 flex flex-col gap-4">
           
           {/* LAUNCH LIVE GAME CONTAINER CONTROLS */}
-          <div className="bg-gradient-to-tr from-purple-950/30 to-[#03010a] border border-fuchsia-500/30 rounded-2xl p-5 shadow-xl shadow-fuchsia-500/5 space-y-3">
+          <div className="bg-gradient-to-tr from-teal-950/30 to-[#01070e] border border-cyan-500/30 rounded-2xl p-5 shadow-xl shadow-cyan-500/5 space-y-3">
             <div className="space-y-1 text-center">
-              <Tv className="w-10 h-10 text-fuchsia-400 mx-auto mb-1 animate-pulse" />
+              <Tv className="w-10 h-10 text-cyan-400 mx-auto mb-1 animate-pulse" />
               <h3 className="text-xs font-display font-black tracking-widest text-white uppercase">
                 LAUNCH COMBAT INTERFACE
               </h3>
-              <p className="text-[9px] text-purple-300/70 uppercase tracking-wider leading-relaxed">
+              <p className="text-[9px] text-teal-300/70 uppercase tracking-wider leading-relaxed">
                 Open live game view inside the injector panel with a floating HUD predictions widget!
               </p>
             </div>
 
             <button
               onClick={() => setGameViewActive(true)}
-              className="w-full bg-gradient-to-r from-fuchsia-500 to-purple-600 hover:from-fuchsia-400 hover:to-purple-500 text-white font-display font-black text-[11px] py-2.5 rounded-xl uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-lg shadow-fuchsia-500/20"
+              className="w-full bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white font-display font-black text-[11px] py-2.5 rounded-xl uppercase tracking-widest transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-lg shadow-cyan-500/20"
             >
               <ExternalLink className="w-4 h-4" /> Open Live Game View
             </button>
           </div>
 
           {/* SYSTEM SETTINGS PANEL */}
-          <div className="bg-[#090514]/90 border border-purple-950/80 rounded-2xl p-5 shadow-xl space-y-4">
-            <div className="flex items-center gap-2 border-b border-purple-950/40 pb-2.5">
+          <div className="bg-[#020d1a]/90 border border-teal-950/80 rounded-2xl p-5 shadow-xl space-y-4">
+            <div className="flex items-center gap-2 border-b border-teal-950/40 pb-2.5">
               <Sparkles className="w-4.5 h-4.5 text-amber-400" />
-              <h3 className="text-xs font-display font-black tracking-widest text-purple-100 uppercase">
+              <h3 className="text-xs font-display font-black tracking-widest text-teal-100 uppercase">
                 SYSTEM SETTINGS (अल्गोरिदम)
               </h3>
             </div>
 
             {/* PREDICTION MODE */}
             <div className="space-y-1.5">
-              <label className="text-[10px] text-purple-400/80 font-mono font-bold uppercase block">
+              <label className="text-[10px] text-cyan-400/80 font-mono font-bold uppercase block">
                 VIP PREDICTION MODE
               </label>
               <div className="grid grid-cols-3 gap-1 font-mono text-[9px]">
@@ -1825,7 +1823,7 @@ export default function App() {
                   className={`py-2 px-1 rounded-lg border font-bold transition-all uppercase cursor-pointer ${
                     settings.predMode === 'auto'
                       ? 'bg-amber-500/10 border-amber-500 text-amber-400'
-                      : 'bg-[#03010a] border-purple-950/60 text-purple-400/80 hover:text-white'
+                      : 'bg-[#01070e] border-teal-950/60 text-cyan-400/80 hover:text-white'
                   }`}
                 >
                   Auto Hybrid
@@ -1835,7 +1833,7 @@ export default function App() {
                   className={`py-2 px-1 rounded-lg border font-bold transition-all uppercase cursor-pointer ${
                     settings.predMode === 'onlyBS'
                       ? 'bg-amber-500/10 border-amber-500 text-amber-400'
-                      : 'bg-[#03010a] border-purple-950/60 text-purple-400/80 hover:text-white'
+                      : 'bg-[#01070e] border-teal-950/60 text-cyan-400/80 hover:text-white'
                   }`}
                 >
                   Only Size
@@ -1845,7 +1843,7 @@ export default function App() {
                   className={`py-2 px-1 rounded-lg border font-bold transition-all uppercase cursor-pointer ${
                     settings.predMode === 'safe'
                       ? 'bg-amber-500/10 border-amber-500 text-amber-400'
-                      : 'bg-[#03010a] border-purple-950/60 text-purple-400/80 hover:text-white'
+                      : 'bg-[#01070e] border-teal-950/60 text-cyan-400/80 hover:text-white'
                   }`}
                 >
                   Strict Safe
@@ -1855,7 +1853,7 @@ export default function App() {
 
             {/* STRATEGY PATTERN */}
             <div className="space-y-1.5">
-              <label className="text-[10px] text-purple-400/80 font-mono font-bold uppercase block">
+              <label className="text-[10px] text-cyan-400/80 font-mono font-bold uppercase block">
                 VIP LOGIC STRATEGY
               </label>
               <div className="space-y-1 font-mono text-[9px]">
@@ -1863,41 +1861,41 @@ export default function App() {
                   onClick={() => setSettings(prev => ({ ...prev, strategy: 'neural' }))}
                   className={`w-full py-2 px-2.5 rounded-lg border font-bold transition-all uppercase text-left flex items-center justify-between cursor-pointer ${
                     settings.strategy === 'neural'
-                      ? 'bg-fuchsia-500/10 border-fuchsia-500 text-fuchsia-400 drop-shadow-[0_0_8px_rgba(217,70,239,0.2)]'
-                      : 'bg-[#03010a] border-purple-950/60 text-purple-400/80 hover:text-white'
+                      ? 'bg-cyan-500/10 border-cyan-500 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.2)]'
+                      : 'bg-[#01070e] border-teal-950/60 text-cyan-400/80 hover:text-white'
                   }`}
                 >
                   <span>🧠 NEURAL STREAK MATCH</span>
-                  <span className={`text-[8px] font-normal ${settings.strategy === 'neural' ? 'text-fuchsia-400' : 'text-purple-400/55'}`}>Dragon Fit</span>
+                  <span className={`text-[8px] font-normal ${settings.strategy === 'neural' ? 'text-cyan-400' : 'text-teal-400/55'}`}>Dragon Fit</span>
                 </button>
                 <button
                   onClick={() => setSettings(prev => ({ ...prev, strategy: 'reverse' }))}
                   className={`w-full py-2 px-2.5 rounded-lg border font-bold transition-all uppercase text-left flex items-center justify-between cursor-pointer ${
                     settings.strategy === 'reverse'
-                      ? 'bg-fuchsia-500/10 border-fuchsia-500 text-fuchsia-400 drop-shadow-[0_0_8px_rgba(217,70,239,0.2)]'
-                      : 'bg-[#03010a] border-purple-950/60 text-purple-400/80 hover:text-white'
+                      ? 'bg-cyan-500/10 border-cyan-500 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.2)]'
+                      : 'bg-[#01070e] border-teal-950/60 text-cyan-400/80 hover:text-white'
                   }`}
                 >
                   <span>🔄 REVERSE MEAN REVERSION</span>
-                  <span className={`text-[8px] font-normal ${settings.strategy === 'reverse' ? 'text-fuchsia-400' : 'text-purple-400/55'}`}>Counter Bet</span>
+                  <span className={`text-[8px] font-normal ${settings.strategy === 'reverse' ? 'text-cyan-400' : 'text-teal-400/55'}`}>Counter Bet</span>
                 </button>
                 <button
                   onClick={() => setSettings(prev => ({ ...prev, strategy: 'frequency' }))}
                   className={`w-full py-2 px-2.5 rounded-lg border font-bold transition-all uppercase text-left flex items-center justify-between cursor-pointer ${
                     settings.strategy === 'frequency'
-                      ? 'bg-fuchsia-500/10 border-fuchsia-500 text-fuchsia-400 drop-shadow-[0_0_8px_rgba(217,70,239,0.2)]'
-                      : 'bg-[#03010a] border-purple-950/60 text-purple-400/80 hover:text-white'
+                      ? 'bg-cyan-500/10 border-cyan-500 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.2)]'
+                      : 'bg-[#01070e] border-teal-950/60 text-cyan-400/80 hover:text-white'
                   }`}
                 >
                   <span>🔥 HOT FREQUENCY ANALYSIS</span>
-                  <span className={`text-[8px] font-normal ${settings.strategy === 'frequency' ? 'text-fuchsia-400' : 'text-purple-400/55'}`}>Hot/Cold</span>
+                  <span className={`text-[8px] font-normal ${settings.strategy === 'frequency' ? 'text-cyan-400' : 'text-teal-400/55'}`}>Hot/Cold</span>
                 </button>
               </div>
             </div>
 
             {/* MINIMUM CONFIDENCE LIMITER */}
             <div className="space-y-1.5 pt-1">
-              <div className="flex justify-between items-center text-[10px] text-purple-400/80 font-mono font-bold uppercase">
+              <div className="flex justify-between items-center text-[10px] text-cyan-400/80 font-mono font-bold uppercase">
                 <span>CONFIDENCE STANDBY FILTER</span>
                 <span className="text-amber-400 font-black">{settings.minConfidence}%</span>
               </div>
@@ -1908,15 +1906,15 @@ export default function App() {
                 step="5"
                 value={settings.minConfidence}
                 onChange={(e) => setSettings(prev => ({ ...prev, minConfidence: parseInt(e.target.value) }))}
-                className="w-full accent-amber-500 h-1 bg-purple-950/40 rounded-lg appearance-none cursor-pointer"
+                className="w-full accent-amber-500 h-1 bg-teal-950/40 rounded-lg appearance-none cursor-pointer"
               />
-              <span className="text-[8px] text-purple-400/60 font-sans leading-tight block uppercase">
+              <span className="text-[8px] text-teal-400/60 font-sans leading-tight block uppercase">
                 If confidence drops below {settings.minConfidence}%, the injector will auto standby (सुरक्षा रोक) to save your funds.
               </span>
             </div>
 
             {/* RAMU BHAI RIGGING ENGINE CONTROL */}
-            <div className="space-y-1.5 pt-3 border-t border-purple-950/40">
+            <div className="space-y-1.5 pt-3 border-t border-teal-950/40">
               <label className="text-[10px] text-amber-400 font-mono font-black uppercase block flex items-center gap-1">
                 <span>🛠️ रामू भाई सीक्रेट सेटिंग्स (HACK CONTROL)</span>
               </label>
@@ -1926,7 +1924,7 @@ export default function App() {
                   className={`py-2 px-1 rounded-lg border font-bold transition-all uppercase cursor-pointer ${
                     settings.rigMode === 'scam'
                       ? 'bg-rose-500/10 border-rose-500 text-rose-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.2)]'
-                      : 'bg-[#03010a] border-purple-950/60 text-purple-400/80 hover:text-white'
+                      : 'bg-[#01070e] border-teal-950/60 text-cyan-400/80 hover:text-white'
                   }`}
                 >
                   👹 Loss 100% (Hide Loss)
@@ -1936,13 +1934,13 @@ export default function App() {
                   className={`py-2 px-1 rounded-lg border font-bold transition-all uppercase cursor-pointer ${
                     settings.rigMode === 'fair'
                       ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400'
-                      : 'bg-[#03010a] border-purple-950/60 text-purple-400/80 hover:text-white'
+                      : 'bg-[#01070e] border-teal-950/60 text-cyan-400/80 hover:text-white'
                   }`}
                 >
                   🟢 100% Fair Mode
                 </button>
               </div>
-              <span className="text-[8px] text-purple-400/60 font-sans leading-tight block uppercase">
+              <span className="text-[8px] text-teal-400/60 font-sans leading-tight block uppercase">
                 {settings.rigMode === 'scam' 
                   ? "हैक चालू है: ग्राहकों का 100% नुकसान होगा लेकिन स्क्रीन पर हमेशा WIN/JACKPOT दिखेगा!" 
                   : "हैक बंद है: प्रेडिक्टर नॉर्मल और असली गणित के अनुसार चलेगा।"}
@@ -1952,19 +1950,19 @@ export default function App() {
           </div>
 
           {/* TELEGRAM BRAND SUPPORT */}
-          <div className="bg-[#03010a] border border-purple-950/60 rounded-2xl p-4 text-center space-y-3 mt-auto shadow-[0_0_15px_rgba(217,70,239,0.03)]">
-            <div className="text-[10px] text-purple-400/70 uppercase tracking-widest font-mono font-bold">
+          <div className="bg-[#01070e] border border-teal-950/60 rounded-2xl p-4 text-center space-y-3 mt-auto shadow-[0_0_15px_rgba(6,182,212,0.03)]">
+            <div className="text-[10px] text-cyan-400/70 uppercase tracking-widest font-mono font-bold">
               OFFICIAL TELEGRAM CHANNEL
             </div>
             <a
               href="https://t.me/+h5jDuTLxOEQ4NmVl"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-fuchsia-400 font-black hover:underline hover:text-fuchsia-300 transition-colors drop-shadow-[0_0_6px_rgba(217,70,239,0.3)]"
+              className="inline-flex items-center gap-1.5 text-xs text-cyan-400 font-black hover:underline hover:text-cyan-300 transition-colors drop-shadow-[0_0_6px_rgba(6,182,212,0.3)]"
             >
               🚀 JOIN TELEGRAM VIP 🚀
             </a>
-            <p className="text-[8.5px] text-purple-400/40 font-sans uppercase">
+            <p className="text-[8.5px] text-cyan-400/40 font-sans uppercase">
               Beware of fakes. Rely purely on Ramu Bhai original panels.
             </p>
           </div>
@@ -1978,10 +1976,10 @@ export default function App() {
         }`}
       >
         {/* Top control bar */}
-        <div className="bg-[#090514]/95 border-b border-purple-950/60 px-4 py-3 flex items-center justify-between shrink-0">
+        <div className="bg-[#020d1a]/95 border-b border-teal-950/60 px-4 py-3 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 bg-fuchsia-500 rounded-full animate-ping" />
-            <h2 className="text-xs font-display font-bold uppercase tracking-wider text-purple-100">
+            <span className="w-2.5 h-2.5 bg-cyan-500 rounded-full animate-ping" />
+            <h2 className="text-xs font-display font-bold uppercase tracking-wider text-teal-100">
               RAMU VIP GAME VIEW (लाइव गेम फ्रेम)
             </h2>
           </div>
@@ -1989,7 +1987,7 @@ export default function App() {
           <div className="flex gap-2">
             <button
               onClick={() => setMiniPanelVisible(!miniPanelVisible)}
-              className="px-3 py-1.5 bg-[#03010a] hover:bg-purple-950/20 border border-purple-950/60 rounded-lg text-[10px] uppercase font-bold text-purple-300 cursor-pointer"
+              className="px-3 py-1.5 bg-[#01070e] hover:bg-teal-950/20 border border-teal-950/60 rounded-lg text-[10px] uppercase font-bold text-teal-300 cursor-pointer"
             >
               {miniPanelVisible ? '👁️ Hide Mini Panel' : '👁️ Show Mini Panel'}
             </button>
@@ -2010,27 +2008,27 @@ export default function App() {
               dragElastic={0.1}
               dragMomentum={false}
               initial={{ right: 20, top: 80 }}
-              className="absolute z-[60000] w-64 bg-[#090514]/95 border-2 border-fuchsia-500/80 rounded-2xl p-4 shadow-2xl shadow-black/90 cursor-move animate-royal-glow"
+              className="absolute z-[60000] w-64 bg-[#020d1a]/95 border-2 border-cyan-500/80 rounded-2xl p-4 shadow-2xl shadow-black/90 cursor-move animate-royal-glow"
             >
-              <div className="flex justify-between items-center border-b border-purple-950/40 pb-2 mb-2 pointer-events-none select-none">
-                <span className="text-[9px] font-display font-black text-fuchsia-400 uppercase tracking-widest flex items-center gap-1 drop-shadow-[0_0_8px_rgba(217,70,239,0.3)]">
+              <div className="flex justify-between items-center border-b border-teal-950/40 pb-2 mb-2 pointer-events-none select-none">
+                <span className="text-[9px] font-display font-black text-cyan-400 uppercase tracking-widest flex items-center gap-1 drop-shadow-[0_0_8px_rgba(6,182,212,0.3)]">
                   <Sparkles className="w-3 h-3 animate-spin" /> RAMU VIP PREDICTOR
                 </span>
-                <span className="text-[8px] text-purple-400/50 uppercase font-mono font-bold bg-[#03010a] border border-purple-950/40 px-1.5 py-0.5 rounded">
+                <span className="text-[8px] text-cyan-400/50 uppercase font-mono font-bold bg-[#01070e] border border-teal-950/40 px-1.5 py-0.5 rounded">
                   DRAG ME
                 </span>
               </div>
 
               {/* Floating Mode Switcher Tabs */}
-              <div className="flex gap-1 p-1 bg-black/40 rounded-lg border border-purple-950 mb-3 pointer-events-auto">
+              <div className="flex gap-1 p-1 bg-black/40 rounded-lg border border-teal-950 mb-3 pointer-events-auto">
                 {(['30s', '1m', '3m', '5m'] as WingoMode[]).map((m) => (
                   <button
                     key={m}
                     onClick={() => setActiveMode(m)}
                     className={`flex-1 py-1 rounded text-[8px] font-black uppercase transition-all cursor-pointer ${
                       activeMode === m
-                        ? 'bg-gradient-to-r from-fuchsia-600 to-purple-600 text-white shadow shadow-fuchsia-500/30'
-                        : 'text-zinc-400 hover:text-fuchsia-400'
+                        ? 'bg-gradient-to-r from-cyan-600 to-teal-600 text-white shadow shadow-cyan-500/30'
+                        : 'text-zinc-400 hover:text-cyan-400'
                     }`}
                   >
                     Wingo {m}
@@ -2040,16 +2038,16 @@ export default function App() {
 
               <div className="space-y-2.5 font-mono pointer-events-none select-none">
                 <div className="flex justify-between items-center text-[10px]">
-                  <span className="text-purple-400/60">PERIOD:</span>
-                  <span className="text-fuchsia-400 font-bold tracking-widest">
+                  <span className="text-teal-400/60">PERIOD:</span>
+                  <span className="text-cyan-400 font-bold tracking-widest">
                     {currentChannel.targetPeriod === "Syncing..." ? "Syncing..." : "..." + currentChannel.targetPeriod.slice(-5)}
                   </span>
                 </div>
 
                 <div className="flex justify-between items-center text-[10px]">
-                  <span className="text-purple-400/60">PREDICTION:</span>
+                  <span className="text-teal-400/60">PREDICTION:</span>
                   {!currentChannel.lastPredVal ? (
-                    <span className="text-purple-950 font-bold animate-pulse">AWAITING</span>
+                    <span className="text-teal-950 font-bold animate-pulse">AWAITING</span>
                   ) : (
                     <span className={`font-black text-xs uppercase tracking-wider ${
                       currentChannel.lastPredVal === 'BIG' || currentChannel.lastPredVal === 'GREEN'
@@ -2061,10 +2059,10 @@ export default function App() {
                   )}
                 </div>
 
-                <div className="flex justify-between items-center pt-1 border-t border-purple-950/40">
-                  <span className="text-[8px] text-purple-400/60 uppercase">BALLS:</span>
+                <div className="flex justify-between items-center pt-1 border-t border-teal-950/40">
+                  <span className="text-[8px] text-teal-400/60 uppercase">BALLS:</span>
                   {currentChannel.lastPredBalls.length === 0 ? (
-                    <span className="text-purple-950 text-xs">? ?</span>
+                    <span className="text-teal-950 text-xs">? ?</span>
                   ) : (
                     <div className="flex gap-1">
                       {currentChannel.lastPredBalls.map((b, bIdx) => (
@@ -2079,7 +2077,7 @@ export default function App() {
                   )}
                 </div>
 
-                <div className="flex justify-between items-center pt-1 border-t border-purple-950/40 text-[8px] text-purple-400/60 uppercase">
+                <div className="flex justify-between items-center pt-1 border-t border-teal-950/40 text-[8px] text-teal-400/60 uppercase">
                   <span>IN-GAME JACKPOTS:</span>
                   <span className="text-amber-400 font-black text-[10px] drop-shadow-[0_0_6px_rgba(245,158,11,0.3)]">{inGameJackpotsCount}</span>
                 </div>
